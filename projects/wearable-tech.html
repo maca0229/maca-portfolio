@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wearable Tech — MACA</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="project.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style> :root { --accent: #FADC00; } </style>
+</head>
+<body>
+
+  <!-- DRAG BAR -->
+  <div id="drag-bar">
+    <span class="drag-label top">colorful</span>
+    <div class="drag-hint"><span class="drag-arrow">→</span><span class="drag-text">drag</span></div>
+    <span class="drag-label bottom">without<br>color</span>
+  </div>
+  <div id="drag-bar-right">
+    <span class="drag-label top">without<br>color</span>
+    <div class="drag-hint"><span class="drag-arrow drag-arrow-left">←</span><span class="drag-text">drag</span></div>
+    <span class="drag-label bottom">colorful</span>
+  </div>
+  <div id="page-peel"></div>
+  <div id="page-edge"></div>
+
+  <!-- NAV -->
+  <nav class="proj-back">
+    <a href="../index.html#work" class="proj-back-link"><span>←</span> <span data-i18n="back.link">All Work</span></a>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <span class="lang-sep">·</span>
+      <button class="lang-btn" data-lang="zh">中</button>
+      <span class="lang-sep">·</span>
+      <button class="lang-btn" data-lang="ja">日</button>
+    </div>
+    <a href="../index.html" class="nav-logo">MACA</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="proj-hero">
+    <div class="proj-hero-bg"></div>
+    <canvas class="proj-hero-canvas"></canvas>
+    <div class="proj-hero-content">
+      <span class="proj-type-badge">Work</span>
+      <span class="proj-num">02 / 05</span>
+      <h1 class="proj-title">Wearable<br>Tech</h1>
+      <p class="proj-tagline">Wearable technology that merges fashion aesthetics with functional electronics — form meets function at the edge of the body.</p>
+      <div class="proj-meta">
+        <div class="meta-item">
+          <span class="meta-label">Year</span>
+          <span class="meta-val">2024</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Role</span>
+          <span class="meta-val">Designer · Maker</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-val">Design · Electronics · Fashion</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="proj-section">
+    <span class="proj-section-label">Story</span>
+    <p class="proj-lead">[ The story behind this work. What inspired it? What question were you exploring? What does it mean to you? Write 2–3 sentences in your own voice. ]</p>
+  </section>
+
+  <!-- MAIN SHOWCASE (video / gif) -->
+  <section class="proj-section">
+    <span class="proj-section-label">Showcase</span>
+    <div class="proj-media" style="aspect-ratio: 16/9;">
+      <!-- <video src="media/wearable-demo.mp4" autoplay loop muted playsinline></video> -->
+      <div class="proj-media-placeholder">[ Main showcase video or GIF ]</div>
+    </div>
+    <p class="proj-media-caption">[ Caption ]</p>
+  </section>
+
+  <!-- DETAILS: NAME + STORY -->
+  <section class="proj-section">
+    <div class="proj-block">
+      <div class="proj-block-text">
+        <h3>[ Piece / Collection Name ]</h3>
+        <p>[ Describe the piece: what it is, how it works, what it does when worn. ]</p>
+        <p>[ What interactions does it enable? What does the wearer experience? ]</p>
+      </div>
+      <div class="proj-media">
+        <!-- <img src="media/piece-01.jpg" alt=""> -->
+        <div class="proj-media-placeholder">[ Photo or GIF ]</div>
+      </div>
+    </div>
+
+    <div class="proj-block reverse">
+      <div class="proj-block-text">
+        <h3>Making Process</h3>
+        <p>[ Describe how it was made — materials, fabrication methods, electronics, prototyping process. ]</p>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Process video or GIF ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY (multiple views / 3D if applicable) -->
+  <section class="proj-section">
+    <span class="proj-section-label">Gallery</span>
+    <div class="proj-media-grid featured" style="margin-bottom: 2px;">
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Main view ]</div>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Detail view ]</div>
+      </div>
+    </div>
+    <div class="proj-media-grid cols-3">
+      <div class="proj-media" style="min-height:220px;">
+        <div class="proj-media-placeholder">[ View 3 ]</div>
+      </div>
+      <div class="proj-media" style="min-height:220px;">
+        <!-- Embed 3D model: <model-viewer src="model.glb" auto-rotate camera-controls></model-viewer> -->
+        <div class="proj-media-placeholder">[ 3D model ]</div>
+      </div>
+      <div class="proj-media" style="min-height:220px;">
+        <div class="proj-media-placeholder">[ View 5 ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAILS -->
+  <section class="proj-section">
+    <span class="proj-section-label">Details</span>
+    <div class="proj-details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Materials</span>
+        <span class="detail-val">[ Fabric, components, etc. ]</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Electronics</span>
+        <span class="detail-val">[ Sensors, microcontrollers ]</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Dimensions</span>
+        <span class="detail-val">[ Size / wearable spec ]</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Exhibited</span>
+        <span class="detail-val">[ Show / venue / year if any ]</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT PROJECT -->
+  <a href="design-tools.html" class="proj-next">
+    <span class="proj-next-label">Next Project</span>
+    <div class="proj-next-title">Design Tools →</div>
+  </a>
+
+  <footer>
+    <span>© 2025 MACA</span>
+    <span>Smart Textile · Wearable Tech · Design</span>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="../i18n.js"></script>
+  <script src="project.js"></script>
+  <script> initHeroBg('#FADC00'); </script>
+</body>
+</html>

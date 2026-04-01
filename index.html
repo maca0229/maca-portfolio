@@ -10,30 +10,57 @@
 </head>
 <body>
 
-  <!-- NAV -->
+  <!-- DRAG BAR -->
+  <div id="drag-bar">
+    <span class="drag-label top" data-i18n="drag.colorful">colorful</span>
+    <div class="drag-hint">
+      <span class="drag-arrow">→</span>
+      <span class="drag-text" data-i18n="drag.text">drag</span>
+    </div>
+    <span class="drag-label bottom" data-i18n-html="drag.without">without<br>color</span>
+  </div>
+
+  <div id="drag-bar-right">
+    <span class="drag-label top" data-i18n-html="drag.without">without<br>color</span>
+    <div class="drag-hint">
+      <span class="drag-arrow drag-arrow-left">←</span>
+      <span class="drag-text" data-i18n="drag.text">drag</span>
+    </div>
+    <span class="drag-label bottom" data-i18n="drag.colorful">colorful</span>
+  </div>
+
+  <div id="page-peel"></div>
+  <div id="page-edge"></div>
+
   <nav id="nav">
     <div class="nav-logo">MACA</div>
     <div class="nav-links">
-      <a href="#work">Work</a>
-      <a href="#contact">Contact</a>
+      <a href="#work" data-i18n="nav.work">Work</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="en">EN</button>
+        <span class="lang-sep">·</span>
+        <button class="lang-btn" data-lang="zh">中</button>
+        <span class="lang-sep">·</span>
+        <button class="lang-btn" data-lang="ja">日</button>
+      </div>
     </div>
-    <button id="bw-toggle" aria-label="Toggle B&W">◑</button>
   </nav>
 
   <!-- HERO -->
   <section id="hero">
     <canvas id="hero-canvas"></canvas>
     <div class="hero-content">
-      <div class="hero-tag">Designer · Researcher · Maker</div>
+      <div class="hero-tag" data-i18n="hero.tag">Designer · Researcher · Maker</div>
       <div class="hero-title-wrapper">
         <h1 class="hero-title">MACA</h1>
         <canvas id="mosaic-canvas"></canvas>
       </div>
-      <p class="hero-subtitle">Smart Textile · Wearable Tech · Design Tools · 3D</p>
-      <a href="#work" class="hero-cta">View Work ↓</a>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">Smart Textile · Wearable Tech · Design Tools · 3D</p>
+      <a href="#work" class="hero-cta" data-i18n="hero.cta">View Work ↓</a>
     </div>
     <div class="hero-scroll-indicator">
-      <span>Scroll</span>
+      <span data-i18n="hero.scroll">Scroll</span>
       <div class="scroll-line"></div>
     </div>
   </section>
@@ -41,98 +68,253 @@
   <!-- WORK -->
   <section id="work">
     <div class="section-header">
-      <span class="section-num">01</span>
-      <h2>Selected Work</h2>
+      <span class="section-num" data-i18n="work.num">01</span>
+      <h2 data-i18n="work.heading">Selected Work</h2>
     </div>
 
     <div class="projects-grid">
 
-      <div class="project-card" style="--accent: #CA4CE5;">
-        <div class="project-visual">
-          <div class="project-canvas-wrapper">
-            <canvas class="project-canvas" data-texture="annual"></canvas>
+      <!-- 01 Smart Textile -->
+      <div class="project-item">
+        <div class="project-card" style="--accent: #CA4CE5;">
+          <div class="project-visual">
+            <div class="project-canvas-wrapper">
+              <canvas class="project-canvas" data-texture="annual"></canvas>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-num" data-i18n="p1.num">01</span>
+            <h3 data-i18n="p1.title">Smart Textile</h3>
+            <p data-i18n="p1.desc">Research and development of intelligent fabric systems integrating sensors and responsive materials.</p>
+            <div class="project-tags">
+              <span class="tag" data-i18n="p1.t1">Research</span>
+              <span class="tag" data-i18n="p1.t2">Hardware</span>
+              <span class="tag" data-i18n="p1.t3">Materials</span>
+            </div>
+            <div class="expand-row">
+              <span class="expand-icon">+</span>
+              <span class="expand-label" data-i18n="p1.expand">View Details</span>
+            </div>
           </div>
         </div>
-        <div class="project-info">
-          <span class="project-num">01</span>
-          <h3>Smart Textile</h3>
-          <p>Research and development of intelligent fabric systems integrating sensors and responsive materials.</p>
-          <div class="project-tags">
-            <span class="tag">Research</span>
-            <span class="tag">Hardware</span>
-            <span class="tag">Materials</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card reverse" style="--accent: #FADC00;">
-        <div class="project-visual">
-          <div class="project-canvas-wrapper">
-            <canvas class="project-canvas" data-texture="wavy"></canvas>
-          </div>
-        </div>
-        <div class="project-info">
-          <span class="project-num">02</span>
-          <h3>Wearable Tech</h3>
-          <p>Designing wearable technology that merges fashion aesthetics with functional electronics.</p>
-          <div class="project-tags">
-            <span class="tag">Design</span>
-            <span class="tag">Electronics</span>
-            <span class="tag">Fashion</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-card" style="--accent: #1F9907;">
-        <div class="project-visual">
-          <div class="project-canvas-wrapper">
-            <canvas class="project-canvas" data-texture="dots"></canvas>
-          </div>
-        </div>
-        <div class="project-info">
-          <span class="project-num">03</span>
-          <h3>Design Tools</h3>
-          <p>Open-source tools for designers working at the intersection of technology and craft.</p>
-          <div class="project-tags">
-            <span class="tag">Open Source</span>
-            <span class="tag">Software</span>
-            <span class="tag">Tools</span>
+        <div class="project-panel">
+          <div class="panel-inner">
+            <div class="panel-info">
+              <span class="panel-tag" data-i18n="p1.panel.tag">01 / Smart Textile</span>
+              <h3 data-i18n="p1.title">Smart Textile</h3>
+              <p data-i18n="p1.panel.desc">Research and development of intelligent fabric systems integrating sensors and responsive materials. Exploring the boundaries of traditional textiles with embedded technology.</p>
+              <a href="projects/smart-textile.html" class="panel-cta" data-i18n="p1.panel.cta">View Full Project →</a>
+            </div>
+            <div class="panel-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track">
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#CA4CE5"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#68007F"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#1F9907"></div></div>
+                </div>
+              </div>
+              <button class="carousel-prev">‹</button>
+              <button class="carousel-next">›</button>
+              <div class="carousel-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="project-card reverse" style="--accent: #CC9F01;">
-        <div class="project-visual">
-          <div class="project-canvas-wrapper">
-            <canvas class="project-canvas" data-texture="stripes"></canvas>
+      <!-- 02 Wearable Tech -->
+      <div class="project-item">
+        <div class="project-card reverse" style="--accent: #FADC00;">
+          <div class="project-visual">
+            <div class="project-canvas-wrapper">
+              <canvas class="project-canvas" data-texture="wavy"></canvas>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-num" data-i18n="p2.num">02</span>
+            <h3 data-i18n="p2.title">Wearable Tech</h3>
+            <p data-i18n="p2.desc">Designing wearable technology that merges fashion aesthetics with functional electronics.</p>
+            <div class="project-tags">
+              <span class="tag" data-i18n="p2.t1">Design</span>
+              <span class="tag" data-i18n="p2.t2">Electronics</span>
+              <span class="tag" data-i18n="p2.t3">Fashion</span>
+            </div>
+            <div class="expand-row">
+              <span class="expand-icon">+</span>
+              <span class="expand-label" data-i18n="p2.expand">View Details</span>
+            </div>
           </div>
         </div>
-        <div class="project-info">
-          <span class="project-num">04</span>
-          <h3>Installation Design</h3>
-          <p>Large-scale interactive installations exploring the boundaries of physical and digital space.</p>
-          <div class="project-tags">
-            <span class="tag">Installation</span>
-            <span class="tag">Interactive</span>
-            <span class="tag">Space</span>
+        <div class="project-panel">
+          <div class="panel-inner">
+            <div class="panel-info">
+              <span class="panel-tag" data-i18n="p2.panel.tag">02 / Wearable Tech</span>
+              <h3 data-i18n="p2.title">Wearable Tech</h3>
+              <p data-i18n="p2.panel.desc">Designing wearable technology that merges fashion aesthetics with functional electronics. Form meets function at the edge of the body.</p>
+              <a href="projects/wearable-tech.html" class="panel-cta" data-i18n="p2.panel.cta">View Full Project →</a>
+            </div>
+            <div class="panel-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track">
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#FADC00"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#CC9F01"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#61A94D"></div></div>
+                </div>
+              </div>
+              <button class="carousel-prev">‹</button>
+              <button class="carousel-next">›</button>
+              <div class="carousel-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="project-card" style="--accent: #61A94D;">
-        <div class="project-visual">
-          <div class="project-canvas-wrapper">
-            <canvas class="project-canvas" data-texture="mixed"></canvas>
+      <!-- 03 Design Tools -->
+      <div class="project-item">
+        <div class="project-card" style="--accent: #1F9907;">
+          <div class="project-visual">
+            <div class="project-canvas-wrapper">
+              <canvas class="project-canvas" data-texture="dots"></canvas>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-num" data-i18n="p3.num">03</span>
+            <h3 data-i18n="p3.title">Design Tools</h3>
+            <p data-i18n="p3.desc">Open-source tools for designers working at the intersection of technology and craft.</p>
+            <div class="project-tags">
+              <span class="tag" data-i18n="p3.t1">Open Source</span>
+              <span class="tag" data-i18n="p3.t2">Software</span>
+              <span class="tag" data-i18n="p3.t3">Tools</span>
+            </div>
+            <div class="expand-row">
+              <span class="expand-icon">+</span>
+              <span class="expand-label" data-i18n="p3.expand">View Details</span>
+            </div>
           </div>
         </div>
-        <div class="project-info">
-          <span class="project-num">05</span>
-          <h3>Ideas with AI</h3>
-          <p>Exploring creative possibilities at the intersection of artificial intelligence and design practice.</p>
-          <div class="project-tags">
-            <span class="tag">AI</span>
-            <span class="tag">Experimental</span>
-            <span class="tag">Generative</span>
+        <div class="project-panel">
+          <div class="panel-inner">
+            <div class="panel-info">
+              <span class="panel-tag" data-i18n="p3.panel.tag">03 / Design Tools</span>
+              <h3 data-i18n="p3.title">Design Tools</h3>
+              <p data-i18n="p3.panel.desc">Open-source tools for designers working at the intersection of technology and craft. Built with and for the community.</p>
+              <a href="projects/design-tools.html" class="panel-cta" data-i18n="p3.panel.cta">View Full Project →</a>
+            </div>
+            <div class="panel-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track">
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#1F9907"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#61A94D"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#004727"></div></div>
+                </div>
+              </div>
+              <button class="carousel-prev">‹</button>
+              <button class="carousel-next">›</button>
+              <div class="carousel-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Installation Design -->
+      <div class="project-item">
+        <div class="project-card reverse" style="--accent: #CC9F01;">
+          <div class="project-visual">
+            <div class="project-canvas-wrapper">
+              <canvas class="project-canvas" data-texture="stripes"></canvas>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-num" data-i18n="p4.num">04</span>
+            <h3 data-i18n="p4.title">Installation Design</h3>
+            <p data-i18n="p4.desc">Large-scale interactive installations exploring the boundaries of physical and digital space.</p>
+            <div class="project-tags">
+              <span class="tag" data-i18n="p4.t1">Installation</span>
+              <span class="tag" data-i18n="p4.t2">Interactive</span>
+              <span class="tag" data-i18n="p4.t3">Space</span>
+            </div>
+            <div class="expand-row">
+              <span class="expand-icon">+</span>
+              <span class="expand-label" data-i18n="p4.expand">View Details</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-panel">
+          <div class="panel-inner">
+            <div class="panel-info">
+              <span class="panel-tag" data-i18n="p4.panel.tag">04 / Installation Design</span>
+              <h3 data-i18n="p4.title">Installation Design</h3>
+              <p data-i18n="p4.panel.desc">Large-scale interactive installations exploring the boundaries of physical and digital space. Immersive environments that respond to the body.</p>
+              <a href="projects/installation-design.html" class="panel-cta" data-i18n="p4.panel.cta">View Full Project →</a>
+            </div>
+            <div class="panel-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track">
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#CC9F01"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#FADC00"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#68007F"></div></div>
+                </div>
+              </div>
+              <button class="carousel-prev">‹</button>
+              <button class="carousel-next">›</button>
+              <div class="carousel-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Ideas with AI -->
+      <div class="project-item">
+        <div class="project-card" style="--accent: #61A94D;">
+          <div class="project-visual">
+            <div class="project-canvas-wrapper">
+              <canvas class="project-canvas" data-texture="mixed"></canvas>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-num" data-i18n="p5.num">05</span>
+            <h3 data-i18n="p5.title">Ideas with AI</h3>
+            <p data-i18n="p5.desc">Exploring creative possibilities at the intersection of artificial intelligence and design practice.</p>
+            <div class="project-tags">
+              <span class="tag" data-i18n="p5.t1">AI</span>
+              <span class="tag" data-i18n="p5.t2">Experimental</span>
+              <span class="tag" data-i18n="p5.t3">Generative</span>
+            </div>
+            <div class="expand-row">
+              <span class="expand-icon">+</span>
+              <span class="expand-label" data-i18n="p5.expand">View Details</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-panel">
+          <div class="panel-inner">
+            <div class="panel-info">
+              <span class="panel-tag" data-i18n="p5.panel.tag">05 / Ideas with AI</span>
+              <h3 data-i18n="p5.title">Ideas with AI</h3>
+              <p data-i18n="p5.panel.desc">Exploring creative possibilities at the intersection of artificial intelligence and design practice. Generative tools for speculative thinking.</p>
+              <a href="projects/ideas-with-ai.html" class="panel-cta" data-i18n="p5.panel.cta">View Full Project →</a>
+            </div>
+            <div class="panel-carousel">
+              <div class="carousel-viewport">
+                <div class="carousel-track">
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#61A94D"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#1F9907"></div></div>
+                  <div class="carousel-slide"><div class="slide-placeholder" style="--ph:#CA4CE5"></div></div>
+                </div>
+              </div>
+              <button class="carousel-prev">‹</button>
+              <button class="carousel-next">›</button>
+              <div class="carousel-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -143,21 +325,21 @@
   <!-- CONTACT -->
   <section id="contact">
     <div class="contact-content">
-      <span class="section-num">02</span>
-      <h2>Let's Connect</h2>
-      <p>Open for collaborations, research partnerships, and conversations about the future of wearable technology.</p>
+      <span class="section-num" data-i18n="contact.num">02</span>
+      <h2 data-i18n="contact.heading">Let's Connect</h2>
+      <p data-i18n="contact.desc">Open for collaborations, research partnerships, and conversations about the future of wearable technology.</p>
       <a href="mailto:hello@maca.design" class="contact-email">hello@maca.design</a>
     </div>
   </section>
 
   <footer>
-    <span>© 2025 MACA</span>
-    <span>Smart Textile · Wearable Tech · Design</span>
+    <span data-i18n="footer.left">© 2025 MACA</span>
+    <span data-i18n="footer.right">Smart Textile · Wearable Tech · Design</span>
   </footer>
-
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="i18n.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

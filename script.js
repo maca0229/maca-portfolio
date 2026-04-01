@@ -102,27 +102,106 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
   requestAnimationFrame(animateCursor);
 })();
 
+/* ─── I18N ─── */
+initI18n();
+
 /* ─── NAV SCROLL ─── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ─── B&W TOGGLE (A+C: hover preview + click to lock) ─── */
-const bwBtn = document.getElementById('bw-toggle');
-let bwLocked = false;
+/* ─── PAGE PEEL DRAG INTERACTION ─── */
+const dragBar      = document.getElementById('drag-bar');
+const dragBarRight = document.getElementById('drag-bar-right');
+const pagePeel     = document.getElementById('page-peel');
+const pageEdge     = document.getElementById('page-edge');
+const BAR_W        = 38;
 
-bwBtn.addEventListener('mouseenter', () => {
-  if (!bwLocked) document.documentElement.classList.add('bw');
-});
-bwBtn.addEventListener('mouseleave', () => {
-  if (!bwLocked) document.documentElement.classList.remove('bw');
-});
-bwBtn.addEventListener('click', () => {
-  bwLocked = !bwLocked;
-  document.documentElement.classList.toggle('bw', bwLocked);
-  bwBtn.textContent = bwLocked ? '◐' : '◑';
-});
+let isDragging = false;
+let peelActive = false;
+let currentX   = 0;
+
+function setReveal(x, animate = false) {
+  const clamped = Math.max(0, Math.min(x, innerWidth));
+  if (animate) {
+    pagePeel.style.transition = 'clip-path 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+    pageEdge.style.transition = 'left 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s';
+  } else {
+    pagePeel.style.transition = 'none';
+    pageEdge.style.transition = 'none';
+  }
+  pagePeel.style.clipPath = `inset(0 ${innerWidth - clamped}px 0 0)`;
+  pageEdge.style.left     = clamped + 'px';
+  pageEdge.style.opacity  = (clamped > BAR_W + 4 && clamped < innerWidth - 4) ? '1' : '0';
+  currentX = clamped;
+}
+
+function snapTo(target) {
+  const bw = target > 0;
+  dragBar.classList.toggle('bw-mode', bw);
+  dragBar.classList.toggle('hidden', bw);
+  dragBarRight.classList.toggle('visible', bw);
+  peelActive = bw;
+  localStorage.setItem('bwMode', bw ? '1' : '0');
+  setReveal(target, true);
+}
+
+// Restore state from previous page (no animation)
+if (localStorage.getItem('bwMode') === '1') {
+  dragBar.classList.add('bw-mode', 'hidden');
+  dragBarRight.classList.add('visible');
+  peelActive = true;
+  setReveal(innerWidth, false);
+}
+
+function startDrag(e) {
+  isDragging = true;
+  pagePeel.style.transition = 'none';
+  pageEdge.style.transition = 'none';
+  e.preventDefault();
+}
+
+function onDragMove(x) {
+  if (!isDragging) return;
+  setReveal(x);
+}
+
+function onDragEnd() {
+  if (!isDragging) return;
+  isDragging = false;
+  snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0);
+}
+
+// Left bar (color → B&W)
+dragBar.addEventListener('mousedown', startDrag);
+
+// Right bar (B&W → color)
+dragBarRight.addEventListener('mousedown', startDrag);
+
+document.addEventListener('mousemove', (e) => onDragMove(e.clientX));
+document.addEventListener('mouseup', onDragEnd);
+
+// Touch — left bar
+dragBar.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  pagePeel.style.transition = 'none';
+  e.preventDefault();
+}, { passive: false });
+
+// Touch — right bar
+dragBarRight.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  pagePeel.style.transition = 'none';
+  e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  setReveal(e.touches[0].clientX);
+}, { passive: true });
+
+document.addEventListener('touchend', onDragEnd);
 
 /* ─── SHARED TEXTURE DRAWING FUNCTIONS ─── */
 
@@ -381,6 +460,46 @@ function initProjectCanvas(canvas, texture, accentHex) {
     cells = buildCells(W, H);
   }).observe(canvas);
 }
+
+/* ─── PROJECT PANELS ─── */
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const item  = card.closest('.project-item');
+    const panel = item.querySelector('.project-panel');
+    const isOpen = panel.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.project-panel.open').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.project-card.open').forEach(c => c.classList.remove('open'));
+
+    // Open this one if it was closed
+    if (!isOpen) {
+      panel.classList.add('open');
+      card.classList.add('open');
+      setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+    }
+  });
+});
+
+// Carousel
+document.querySelectorAll('.panel-carousel').forEach(carousel => {
+  const track  = carousel.querySelector('.carousel-track');
+  const slides = carousel.querySelectorAll('.carousel-slide');
+  const dots   = carousel.querySelectorAll('.dot');
+  const prev   = carousel.querySelector('.carousel-prev');
+  const next   = carousel.querySelector('.carousel-next');
+  let current  = 0;
+
+  function goTo(i) {
+    current = (i + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
+  }
+
+  prev.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
+  next.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
+  dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+});
 
 /* ─── GSAP ANIMATIONS ─── */
 gsap.registerPlugin(ScrollTrigger);

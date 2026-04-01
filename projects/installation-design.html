@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Design — MACA</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="project.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style> :root { --accent: #CC9F01; } </style>
+</head>
+<body>
+
+  <!-- DRAG BAR -->
+  <div id="drag-bar">
+    <span class="drag-label top">colorful</span>
+    <div class="drag-hint"><span class="drag-arrow">→</span><span class="drag-text">drag</span></div>
+    <span class="drag-label bottom">without<br>color</span>
+  </div>
+  <div id="drag-bar-right">
+    <span class="drag-label top">without<br>color</span>
+    <div class="drag-hint"><span class="drag-arrow drag-arrow-left">←</span><span class="drag-text">drag</span></div>
+    <span class="drag-label bottom">colorful</span>
+  </div>
+  <div id="page-peel"></div>
+  <div id="page-edge"></div>
+
+  <!-- NAV -->
+  <nav class="proj-back">
+    <a href="../index.html#work" class="proj-back-link"><span>←</span> <span data-i18n="back.link">All Work</span></a>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <span class="lang-sep">·</span>
+      <button class="lang-btn" data-lang="zh">中</button>
+      <span class="lang-sep">·</span>
+      <button class="lang-btn" data-lang="ja">日</button>
+    </div>
+    <a href="../index.html" class="nav-logo">MACA</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="proj-hero">
+    <div class="proj-hero-bg"></div>
+    <canvas class="proj-hero-canvas"></canvas>
+    <div class="proj-hero-content">
+      <span class="proj-type-badge">Work</span>
+      <span class="proj-num">04 / 05</span>
+      <h1 class="proj-title">Installation<br>Design</h1>
+      <p class="proj-tagline">Large-scale interactive installations exploring the boundaries of physical and digital space. Immersive environments that respond to the body.</p>
+      <div class="proj-meta">
+        <div class="meta-item">
+          <span class="meta-label">Year</span>
+          <span class="meta-val">2024</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Role</span>
+          <span class="meta-val">Designer · Artist</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-val">Installation · Interactive</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Venue</span>
+          <span class="meta-val">[ Exhibition / Location ]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="proj-section">
+    <span class="proj-section-label">Story</span>
+    <p class="proj-lead">[ What is the concept behind this installation? What experience does it create for visitors? What themes or ideas does it explore? ]</p>
+  </section>
+
+  <!-- MAIN SHOWCASE -->
+  <section class="proj-section">
+    <span class="proj-section-label">Showcase</span>
+    <div class="proj-media" style="aspect-ratio: 16/9;">
+      <!-- <video src="media/installation-demo.mp4" autoplay loop muted playsinline></video> -->
+      <div class="proj-media-placeholder">[ Installation walkthrough video or GIF ]</div>
+    </div>
+    <p class="proj-media-caption">[ Caption: what viewers are seeing / experiencing ]</p>
+  </section>
+
+  <!-- PIECE DETAILS -->
+  <section class="proj-section">
+    <div class="proj-block">
+      <div class="proj-block-text">
+        <h3>[ Installation Name ]</h3>
+        <p>[ Describe the physical setup: scale, materials, how it occupies space. ]</p>
+        <p>[ How do visitors interact with it? What changes in response to their presence or movement? ]</p>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Wide shot / overhead view ]</div>
+      </div>
+    </div>
+
+    <div class="proj-block reverse">
+      <div class="proj-block-text">
+        <h3>Interaction</h3>
+        <p>[ Detail the interactive elements. Sensors, motors, lights, sound, projections — what responds and how. ]</p>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Close-up or interaction GIF ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="proj-section">
+    <span class="proj-section-label">Gallery</span>
+    <div class="proj-media-grid featured" style="margin-bottom: 2px;">
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Main installation view ]</div>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Visitor interaction ]</div>
+      </div>
+    </div>
+    <div class="proj-media-grid cols-3">
+      <div class="proj-media" style="min-height:220px;">
+        <div class="proj-media-placeholder">[ Detail 1 ]</div>
+      </div>
+      <div class="proj-media" style="min-height:220px;">
+        <div class="proj-media-placeholder">[ Detail 2 ]</div>
+      </div>
+      <div class="proj-media" style="min-height:220px;">
+        <div class="proj-media-placeholder">[ Detail 3 ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAILS -->
+  <section class="proj-section">
+    <span class="proj-section-label">Details</span>
+    <div class="proj-details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Dimensions</span>
+        <span class="detail-val">[ e.g. 6m × 4m × 3m ]</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Materials</span>
+        <span class="detail-val">[ Fabric, steel, LEDs, etc. ]</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Technology</span>
+        <span class="detail-val">[ Sensors, software, hardware ]</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Exhibited</span>
+        <span class="detail-val">[ Venue, City, Year ]</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT PROJECT -->
+  <a href="ideas-with-ai.html" class="proj-next">
+    <span class="proj-next-label">Next Project</span>
+    <div class="proj-next-title">Ideas with AI →</div>
+  </a>
+
+  <footer>
+    <span>© 2025 MACA</span>
+    <span>Smart Textile · Wearable Tech · Design</span>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="../i18n.js"></script>
+  <script src="project.js"></script>
+  <script> initHeroBg('#CC9F01'); </script>
+</body>
+</html>
