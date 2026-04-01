@@ -23,8 +23,9 @@ html {
   inset: 0;
   pointer-events: none;
   z-index: 9990;
-  backdrop-filter: grayscale(1);
-  -webkit-backdrop-filter: grayscale(1);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: grayscale(1) brightness(1.1);
+  -webkit-backdrop-filter: grayscale(1) brightness(1.1);
   clip-path: circle(0% at 50% 50%);
   transition: clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
