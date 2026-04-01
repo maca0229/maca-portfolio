@@ -15,24 +15,10 @@
 
 html {
   scroll-behavior: smooth;
+  transition: filter 0.7s ease;
 }
-
-/* ─── B&W CIRCLE REVEAL LAYER ─── */
-#bw-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9990;
-  backdrop-filter: grayscale(1);
-  -webkit-backdrop-filter: grayscale(1);
-  clip-path: circle(0% at 50% 50%);
-  transition: clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-}
-#bw-layer.active {
-  clip-path: circle(150% at var(--ox, 50%) var(--oy, 50%));
-}
-#bw-layer.shrink {
-  clip-path: circle(0% at var(--ox, 50%) var(--oy, 50%));
+html.bw {
+  filter: grayscale(1);
 }
 
 #bw-toggle {

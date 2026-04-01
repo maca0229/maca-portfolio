@@ -108,34 +108,20 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ─── B&W CIRCLE REVEAL TOGGLE ─── */
-const bwBtn   = document.getElementById('bw-toggle');
-const bwLayer = document.getElementById('bw-layer');
-let bwActive = false;
+/* ─── B&W TOGGLE (A+C: hover preview + click to lock) ─── */
+const bwBtn = document.getElementById('bw-toggle');
+let bwLocked = false;
 
-bwBtn.addEventListener('click', (e) => {
-  const rect = bwBtn.getBoundingClientRect();
-  const ox = Math.round(rect.left + rect.width / 2) + 'px';
-  const oy = Math.round(rect.top  + rect.height / 2) + 'px';
-  bwLayer.style.setProperty('--ox', ox);
-  bwLayer.style.setProperty('--oy', oy);
-
-  bwActive = !bwActive;
-  if (bwActive) {
-    bwLayer.classList.remove('shrink');
-    // Force reflow
-    void bwLayer.offsetWidth;
-    bwLayer.classList.add('active');
-    bwBtn.textContent = '◐';
-  } else {
-    bwLayer.classList.remove('active');
-    bwLayer.classList.add('shrink');
-    bwBtn.textContent = '◑';
-    // Clean up after transition
-    bwLayer.addEventListener('transitionend', () => {
-      bwLayer.classList.remove('shrink');
-    }, { once: true });
-  }
+bwBtn.addEventListener('mouseenter', () => {
+  if (!bwLocked) document.documentElement.classList.add('bw');
+});
+bwBtn.addEventListener('mouseleave', () => {
+  if (!bwLocked) document.documentElement.classList.remove('bw');
+});
+bwBtn.addEventListener('click', () => {
+  bwLocked = !bwLocked;
+  document.documentElement.classList.toggle('bw', bwLocked);
+  bwBtn.textContent = bwLocked ? '◐' : '◑';
 });
 
 /* ─── SHARED TEXTURE DRAWING FUNCTIONS ─── */
