@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MACA — Smart Textile & Wearable Tech</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-logo">MACA</div>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-tag">Designer · Researcher · Maker</div>
+      <div class="hero-title-wrapper">
+        <h1 class="hero-title">MACA</h1>
+        <canvas id="mosaic-canvas"></canvas>
+      </div>
+      <p class="hero-subtitle">Smart Textile · Wearable Tech · Design Tools · 3D</p>
+      <a href="#work" class="hero-cta">View Work ↓</a>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Selected Work</h2>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card" style="--accent: #CA4CE5;">
+        <div class="project-visual">
+          <div class="project-canvas-wrapper">
+            <canvas class="project-canvas" data-shape="fabric"></canvas>
+          </div>
+        </div>
+        <div class="project-info">
+          <span class="project-num">01</span>
+          <h3>Smart Textile</h3>
+          <p>Research and development of intelligent fabric systems integrating sensors and responsive materials.</p>
+          <div class="project-tags">
+            <span class="tag">Research</span>
+            <span class="tag">Hardware</span>
+            <span class="tag">Materials</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reverse" style="--accent: #FADC00;">
+        <div class="project-visual">
+          <div class="project-canvas-wrapper">
+            <canvas class="project-canvas" data-shape="sphere"></canvas>
+          </div>
+        </div>
+        <div class="project-info">
+          <span class="project-num">02</span>
+          <h3>Wearable Tech</h3>
+          <p>Designing wearable technology that merges fashion aesthetics with functional electronics.</p>
+          <div class="project-tags">
+            <span class="tag">Design</span>
+            <span class="tag">Electronics</span>
+            <span class="tag">Fashion</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card" style="--accent: #1F9907;">
+        <div class="project-visual">
+          <div class="project-canvas-wrapper">
+            <canvas class="project-canvas" data-shape="grid"></canvas>
+          </div>
+        </div>
+        <div class="project-info">
+          <span class="project-num">03</span>
+          <h3>Design Tools</h3>
+          <p>Open-source tools for designers working at the intersection of technology and craft.</p>
+          <div class="project-tags">
+            <span class="tag">Open Source</span>
+            <span class="tag">Software</span>
+            <span class="tag">Tools</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reverse" style="--accent: #CC9F01;">
+        <div class="project-visual">
+          <div class="project-canvas-wrapper">
+            <canvas class="project-canvas" data-shape="waves"></canvas>
+          </div>
+        </div>
+        <div class="project-info">
+          <span class="project-num">04</span>
+          <h3>Installation Design</h3>
+          <p>Large-scale interactive installations exploring the boundaries of physical and digital space.</p>
+          <div class="project-tags">
+            <span class="tag">Installation</span>
+            <span class="tag">Interactive</span>
+            <span class="tag">Space</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card" style="--accent: #61A94D;">
+        <div class="project-visual">
+          <div class="project-canvas-wrapper">
+            <canvas class="project-canvas" data-shape="particles"></canvas>
+          </div>
+        </div>
+        <div class="project-info">
+          <span class="project-num">05</span>
+          <h3>Ideas with AI</h3>
+          <p>Exploring creative possibilities at the intersection of artificial intelligence and design practice.</p>
+          <div class="project-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Experimental</span>
+            <span class="tag">Generative</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-content">
+      <span class="section-num">02</span>
+      <h2>Let's Connect</h2>
+      <p>Open for collaborations, research partnerships, and conversations about the future of wearable technology.</p>
+      <a href="mailto:hello@maca.design" class="contact-email">hello@maca.design</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2025 MACA</span>
+    <span>Smart Textile · Wearable Tech · Design</span>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
