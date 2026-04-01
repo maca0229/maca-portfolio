@@ -75,6 +75,43 @@ html {
   0%, 100% { transform: translateX(0); }
   50%       { transform: translateX(5px); }
 }
+@keyframes nudge-left {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(-5px); }
+}
+
+/* ─── RIGHT DRAG BAR (B&W → Color) ─── */
+#drag-bar-right {
+  position: fixed;
+  right: 0; top: 0; bottom: 0;
+  width: 38px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(0,0,0,0.04);
+  border-left: 1px solid rgba(0,0,0,0.12);
+  cursor: ew-resize;
+  user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s, background 0.3s;
+}
+#drag-bar-right.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#drag-bar-right:hover {
+  background: rgba(0,0,0,0.08);
+}
+#drag-bar-right .drag-label { color: #aaa; }
+#drag-bar-right .drag-arrow { color: #888; }
+.drag-arrow-left {
+  font-size: 14px;
+  animation: nudge-left 1.8s ease-in-out infinite;
+}
 
 /* ─── PAGE PEEL & EDGE ─── */
 #page-peel {

@@ -109,17 +109,15 @@ window.addEventListener('scroll', () => {
 });
 
 /* ─── PAGE PEEL DRAG INTERACTION ─── */
-const dragBar  = document.getElementById('drag-bar');
-const pagePeel = document.getElementById('page-peel');
-const pageEdge = document.getElementById('page-edge');
-const BAR_W    = 38;
+const dragBar      = document.getElementById('drag-bar');
+const dragBarRight = document.getElementById('drag-bar-right');
+const pagePeel     = document.getElementById('page-peel');
+const pageEdge     = document.getElementById('page-edge');
+const BAR_W        = 38;
 
 let isDragging = false;
-let peelActive = false;  // fully in B&W
+let peelActive = false;
 let currentX   = 0;
-let snapRaf    = null;
-
-const easeOut = t => 1 - Math.pow(1 - t, 3);
 
 function setReveal(x, animate = false) {
   const clamped = Math.max(0, Math.min(x, innerWidth));
@@ -137,32 +135,49 @@ function setReveal(x, animate = false) {
 }
 
 function snapTo(target) {
-  dragBar.classList.toggle('bw-mode', target > 0);
-  peelActive = target > 0;
+  const bw = target > 0;
+  dragBar.classList.toggle('bw-mode', bw);
+  dragBarRight.classList.toggle('visible', bw);
+  peelActive = bw;
   setReveal(target, true);
 }
 
-// Mouse
-dragBar.addEventListener('mousedown', (e) => {
+function startDrag(e) {
   isDragging = true;
   pagePeel.style.transition = 'none';
   pageEdge.style.transition = 'none';
   e.preventDefault();
-});
+}
 
-document.addEventListener('mousemove', (e) => {
+function onDragMove(x) {
   if (!isDragging) return;
-  setReveal(e.clientX);
-});
+  setReveal(x);
+}
 
-document.addEventListener('mouseup', () => {
+function onDragEnd() {
   if (!isDragging) return;
   isDragging = false;
   snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0);
-});
+}
 
-// Touch
+// Left bar (color → B&W)
+dragBar.addEventListener('mousedown', startDrag);
+
+// Right bar (B&W → color)
+dragBarRight.addEventListener('mousedown', startDrag);
+
+document.addEventListener('mousemove', (e) => onDragMove(e.clientX));
+document.addEventListener('mouseup', onDragEnd);
+
+// Touch — left bar
 dragBar.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  pagePeel.style.transition = 'none';
+  e.preventDefault();
+}, { passive: false });
+
+// Touch — right bar
+dragBarRight.addEventListener('touchstart', (e) => {
   isDragging = true;
   pagePeel.style.transition = 'none';
   e.preventDefault();
@@ -173,11 +188,7 @@ document.addEventListener('touchmove', (e) => {
   setReveal(e.touches[0].clientX);
 }, { passive: true });
 
-document.addEventListener('touchend', () => {
-  if (!isDragging) return;
-  isDragging = false;
-  snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0);
-});
+document.addEventListener('touchend', onDragEnd);
 
 /* ─── SHARED TEXTURE DRAWING FUNCTIONS ─── */
 
