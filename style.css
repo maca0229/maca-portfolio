@@ -32,7 +32,7 @@ html {
   border-right: 1px solid rgba(255,255,255,0.1);
   cursor: ew-resize;
   user-select: none;
-  transition: background 0.3s;
+  transition: background 0.3s, opacity 0.4s;
 }
 #drag-bar:hover {
   background: rgba(255,255,255,0.08);
@@ -40,6 +40,10 @@ html {
 #drag-bar.bw-mode {
   background: rgba(0,0,0,0.04);
   border-right-color: rgba(0,0,0,0.12);
+}
+#drag-bar.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 .drag-label {
   writing-mode: vertical-rl;

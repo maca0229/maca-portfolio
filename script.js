@@ -137,6 +137,7 @@ function setReveal(x, animate = false) {
 function snapTo(target) {
   const bw = target > 0;
   dragBar.classList.toggle('bw-mode', bw);
+  dragBar.classList.toggle('hidden', bw);
   dragBarRight.classList.toggle('visible', bw);
   peelActive = bw;
   setReveal(target, true);
