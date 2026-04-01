@@ -113,7 +113,6 @@ body:hover .cursor { opacity: 1; }
   top: -10px; left: -16px;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.78;
 }
 .hero-subtitle {
   font-size: 13px; letter-spacing: 0.2em; color: var(--dim);
