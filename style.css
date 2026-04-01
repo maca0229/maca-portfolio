@@ -107,15 +107,13 @@ body:hover .cursor { opacity: 1; }
   -webkit-text-fill-color: #f5f2e8;
   margin-bottom: 0;
   opacity: 0; transform: translateY(30px);
-  text-shadow:
-    0 2px 20px rgba(255,255,255,0.15),
-    0 0  60px rgba(245,242,232,0.08);
 }
 #mosaic-canvas {
   position: absolute;
   top: -10px; left: -16px;
   pointer-events: none;
   z-index: 2;
+  opacity: 0.78;
 }
 .hero-subtitle {
   font-size: 13px; letter-spacing: 0.2em; color: var(--dim);
