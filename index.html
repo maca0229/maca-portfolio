@@ -11,13 +11,27 @@
 <body>
 
   <!-- NAV -->
+  <!-- DRAG BAR -->
+  <div id="drag-bar">
+    <span class="drag-label top">colorful</span>
+    <div class="drag-hint">
+      <span class="drag-arrow">→</span>
+      <span class="drag-text">drag</span>
+    </div>
+    <span class="drag-label bottom">without<br>color</span>
+  </div>
+
+  <!-- PAGE PEEL OVERLAY (B&W) -->
+  <div id="page-peel"></div>
+  <!-- PAGE EDGE LINE -->
+  <div id="page-edge"></div>
+
   <nav id="nav">
     <div class="nav-logo">MACA</div>
     <div class="nav-links">
       <a href="#work">Work</a>
       <a href="#contact">Contact</a>
     </div>
-    <button id="bw-toggle" aria-label="Toggle B&W">◑</button>
   </nav>
 
   <!-- HERO -->
@@ -155,7 +169,7 @@
     <span>Smart Textile · Wearable Tech · Design</span>
   </footer>
 
-  <div id="bw-layer"></div>
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>

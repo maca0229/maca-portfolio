@@ -108,81 +108,75 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ─── B&W SOFT CIRCLE REVEAL ─── */
-const bwBtn   = document.getElementById('bw-toggle');
-const bwLayer = document.getElementById('bw-layer');
-let bwActive  = false;
-let bwBusy    = false;
-let bwRaf     = null;
+/* ─── PAGE PEEL DRAG INTERACTION ─── */
+const dragBar  = document.getElementById('drag-bar');
+const pagePeel = document.getElementById('page-peel');
+const pageEdge = document.getElementById('page-edge');
+const BAR_W    = 38;
 
-// easeInOutQuart — 开始和结束都很慢，中间快，感觉很顺滑
-const ease = t => t < 0.5 ? 8*t*t*t*t : 1 - 8*(--t)*t*t*t;
+let isDragging = false;
+let peelActive = false;  // fully in B&W
+let currentX   = 0;
+let snapRaf    = null;
 
-function animateRadius(from, to, duration, ox, oy, onDone) {
-  const FEATHER = 180; // 羽化宽度（px），越大越柔和
-  const start   = performance.now();
-  cancelAnimationFrame(bwRaf);
+const easeOut = t => 1 - Math.pow(1 - t, 3);
 
-  function tick(now) {
-    const p = Math.min((now - start) / duration, 1);
-    const r = from + (to - from) * ease(p);
-    // 渐变：白色实心核心 → 羽化边缘 → 透明
-    const inner = Math.max(0, r - FEATHER);
-    bwLayer.style.background =
-      `radial-gradient(circle at ${ox}px ${oy}px, white ${inner}px, rgba(255,255,255,0.6) ${r * 0.72}px, transparent ${r + FEATHER * 0.5}px)`;
-    if (p < 1) bwRaf = requestAnimationFrame(tick);
-    else onDone && onDone();
+function setReveal(x, animate = false) {
+  const clamped = Math.max(0, Math.min(x, innerWidth));
+  if (animate) {
+    pagePeel.style.transition = 'clip-path 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+    pageEdge.style.transition = 'left 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s';
+  } else {
+    pagePeel.style.transition = 'none';
+    pageEdge.style.transition = 'none';
   }
-  bwRaf = requestAnimationFrame(tick);
+  pagePeel.style.clipPath = `inset(0 ${innerWidth - clamped}px 0 0)`;
+  pageEdge.style.left     = clamped + 'px';
+  pageEdge.style.opacity  = (clamped > BAR_W + 4 && clamped < innerWidth - 4) ? '1' : '0';
+  currentX = clamped;
 }
 
-function enterBW() {
-  if (bwBusy) return;
-  bwBusy = true;
-  const rect = bwBtn.getBoundingClientRect();
-  const ox   = rect.left + rect.width  / 2;
-  const oy   = rect.top  + rect.height / 2;
-  const maxR = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) + 200;
-
-  bwLayer.style.opacity    = '1';
-  bwLayer.style.transition = 'none';
-
-  // 白色软圆向外扩散
-  animateRadius(0, maxR, 900, ox, oy, () => {
-    // 铺满后：切换到黑白页面，让 layer 淡出
-    document.documentElement.classList.add('bw');
-    bwLayer.style.transition = 'opacity 0.5s ease';
-    bwLayer.style.opacity    = '0';
-    bwLayer.addEventListener('transitionend', () => { bwBusy = false; }, { once: true });
-  });
+function snapTo(target) {
+  dragBar.classList.toggle('bw-mode', target > 0);
+  peelActive = target > 0;
+  setReveal(target, true);
 }
 
-function exitBW() {
-  if (bwBusy) return;
-  bwBusy = true;
-  const rect = bwBtn.getBoundingClientRect();
-  const ox   = rect.left + rect.width  / 2;
-  const oy   = rect.top  + rect.height / 2;
-  const maxR = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) + 200;
+// Mouse
+dragBar.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  pagePeel.style.transition = 'none';
+  pageEdge.style.transition = 'none';
+  e.preventDefault();
+});
 
-  // 先把 layer 淡入（带上一次扩散结束时的渐变）
-  bwLayer.style.transition = 'opacity 0.35s ease';
-  bwLayer.style.opacity    = '1';
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  setReveal(e.clientX);
+});
 
-  bwLayer.addEventListener('transitionend', () => {
-    document.documentElement.classList.remove('bw');
-    // 软圆向内收缩消失
-    animateRadius(maxR, 0, 900, ox, oy, () => {
-      bwLayer.style.background = 'none';
-      bwBusy = false;
-    });
-  }, { once: true });
-}
+document.addEventListener('mouseup', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0);
+});
 
-bwBtn.addEventListener('click', () => {
-  bwActive = !bwActive;
-  bwBtn.textContent = bwActive ? '◐' : '◑';
-  if (bwActive) enterBW(); else exitBW();
+// Touch
+dragBar.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  pagePeel.style.transition = 'none';
+  e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  setReveal(e.touches[0].clientX);
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0);
 });
 
 /* ─── SHARED TEXTURE DRAWING FUNCTIONS ─── */
