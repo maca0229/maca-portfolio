@@ -108,58 +108,74 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ─── B&W CIRCLE REVEAL TOGGLE ─── */
+/* ─── B&W SOFT CIRCLE REVEAL ─── */
 const bwBtn   = document.getElementById('bw-toggle');
 const bwLayer = document.getElementById('bw-layer');
 let bwActive  = false;
 let bwBusy    = false;
+let bwRaf     = null;
 
-function bwOrigin() {
-  const r = bwBtn.getBoundingClientRect();
-  return `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
+// easeInOutQuart — 开始和结束都很慢，中间快，感觉很顺滑
+const ease = t => t < 0.5 ? 8*t*t*t*t : 1 - 8*(--t)*t*t*t;
+
+function animateRadius(from, to, duration, ox, oy, onDone) {
+  const FEATHER = 180; // 羽化宽度（px），越大越柔和
+  const start   = performance.now();
+  cancelAnimationFrame(bwRaf);
+
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const r = from + (to - from) * ease(p);
+    // 渐变：白色实心核心 → 羽化边缘 → 透明
+    const inner = Math.max(0, r - FEATHER);
+    bwLayer.style.background =
+      `radial-gradient(circle at ${ox}px ${oy}px, white ${inner}px, rgba(255,255,255,0.6) ${r * 0.72}px, transparent ${r + FEATHER * 0.5}px)`;
+    if (p < 1) bwRaf = requestAnimationFrame(tick);
+    else onDone && onDone();
+  }
+  bwRaf = requestAnimationFrame(tick);
 }
 
 function enterBW() {
   if (bwBusy) return;
   bwBusy = true;
-  const o = bwOrigin();
+  const rect = bwBtn.getBoundingClientRect();
+  const ox   = rect.left + rect.width  / 2;
+  const oy   = rect.top  + rect.height / 2;
+  const maxR = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) + 200;
 
-  // 1. 重置：小圆、不透明白色
-  bwLayer.style.transition = 'none';
   bwLayer.style.opacity    = '1';
-  bwLayer.style.clipPath   = `circle(0% at ${o})`;
-  void bwLayer.offsetWidth;
+  bwLayer.style.transition = 'none';
 
-  // 2. 白圆扩散到全屏
-  bwLayer.style.transition = 'clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1)';
-  bwLayer.style.clipPath   = `circle(150% at ${o})`;
-
-  bwLayer.addEventListener('transitionend', () => {
-    // 3. 应用黑白反转滤镜（白底黑字）
+  // 白色软圆向外扩散
+  animateRadius(0, maxR, 900, ox, oy, () => {
+    // 铺满后：切换到黑白页面，让 layer 淡出
     document.documentElement.classList.add('bw');
-    // 4. 白圆淡出，露出白底页面
-    bwLayer.style.transition = 'opacity 0.3s ease';
+    bwLayer.style.transition = 'opacity 0.5s ease';
     bwLayer.style.opacity    = '0';
     bwLayer.addEventListener('transitionend', () => { bwBusy = false; }, { once: true });
-  }, { once: true });
+  });
 }
 
 function exitBW() {
   if (bwBusy) return;
   bwBusy = true;
-  const o = bwOrigin();
+  const rect = bwBtn.getBoundingClientRect();
+  const ox   = rect.left + rect.width  / 2;
+  const oy   = rect.top  + rect.height / 2;
+  const maxR = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) + 200;
 
-  // 1. 白圆淡入覆盖页面
-  bwLayer.style.transition = 'opacity 0.3s ease';
+  // 先把 layer 淡入（带上一次扩散结束时的渐变）
+  bwLayer.style.transition = 'opacity 0.35s ease';
   bwLayer.style.opacity    = '1';
 
   bwLayer.addEventListener('transitionend', () => {
-    // 2. 移除滤镜（页面回彩色，被白圆遮住）
     document.documentElement.classList.remove('bw');
-    // 3. 白圆收缩回按钮
-    bwLayer.style.transition = 'clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1)';
-    bwLayer.style.clipPath   = `circle(0% at ${o})`;
-    bwLayer.addEventListener('transitionend', () => { bwBusy = false; }, { once: true });
+    // 软圆向内收缩消失
+    animateRadius(maxR, 0, 900, ox, oy, () => {
+      bwLayer.style.background = 'none';
+      bwBusy = false;
+    });
   }, { once: true });
 }
 

@@ -23,9 +23,7 @@ html {
   inset: 0;
   pointer-events: none;
   z-index: 9990;
-  background: #ffffff;
   opacity: 0;
-  clip-path: circle(0% at 50% 50%);
 }
 
 html.bw {
