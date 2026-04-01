@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Textile — MACA</title>
+  <title>SenSequins — MACA</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="project.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,26 +37,26 @@
     <div class="proj-hero-bg"></div>
     <canvas class="proj-hero-canvas"></canvas>
     <div class="proj-hero-content">
-      <span class="proj-type-badge">Research</span>
+      <span class="proj-type-badge">Research · UIST 2022</span>
       <span class="proj-num">01 / 05</span>
-      <h1 class="proj-title">Smart<br>Textile</h1>
-      <p class="proj-tagline">Intelligent fabric systems integrating sensors and responsive materials at the intersection of textile craft and embedded technology.</p>
+      <h1 class="proj-title">Sen<br>Sequins</h1>
+      <p class="proj-tagline">Smart Textile Using 3D Printed Conductive Sequins — expanding the design space of smart textiles from 2D to 2.5D through sequin embroidery and digital fabrication.</p>
       <div class="proj-meta">
         <div class="meta-item">
           <span class="meta-label">Year</span>
-          <span class="meta-val">2024</span>
+          <span class="meta-val">2022</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Role</span>
-          <span class="meta-val">Researcher · Designer</span>
+          <span class="meta-label">Authors</span>
+          <span class="meta-val">Hua Ma · Junichi Yamaoka</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Type</span>
-          <span class="meta-val">Research · Hardware</span>
+          <span class="meta-label">Venue</span>
+          <span class="meta-val">UIST '22, Bend OR, USA</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Status</span>
-          <span class="meta-val">Published</span>
+          <span class="meta-label">Citations</span>
+          <span class="meta-val">16</span>
         </div>
       </div>
     </div>
@@ -66,77 +66,161 @@
   <section class="proj-section">
     <span class="proj-section-label">Publication</span>
     <div class="pub-box">
-      <h3>[ Paper Title — replace with actual title ]</h3>
+      <h3>SenSequins: Smart Textile Using 3D Printed Conductive Sequins</h3>
       <div class="pub-meta-row">
-        <span><strong>Authors:</strong> Maca, et al.</span>
-        <span><strong>Venue:</strong> [ Conference / Journal Name ]</span>
-        <span><strong>Year:</strong> 2024</span>
+        <span><strong>Authors:</strong> Hua Ma, Junichi Yamaoka — Keio University, Yokohama, Japan</span>
+        <span><strong>Venue:</strong> UIST '22: The 35th Annual ACM Symposium on User Interface Software and Technology</span>
+        <span><strong>Published:</strong> October 29 – November 2, 2022 · Bend, OR, USA · Article 111, 13 pages</span>
+        <span><strong>Funding:</strong> JST SPRING (JPMJSP2123) · ZOZO NEXT Inc., Japan</span>
       </div>
-      <a href="#" class="pub-doi">DOI: 10.xxxx/xxxxxx →</a>
+      <a href="https://doi.org/10.1145/3526113.3545688" target="_blank" class="pub-doi">DOI: 10.1145/3526113.3545688 →</a>
     </div>
-
-    <!-- Abstract -->
-    <p class="proj-lead">[ Abstract or overview paragraph. Describe what the research is about, the core question it addresses, and why it matters. 2–3 sentences. ]</p>
+    <p class="proj-lead">We used traditional sequin embroidery as the basis and a 3D printer to expand the design space of sequin materials and structures — developing a new 2.5D smart conductive sequin textile with multiple sensing and interactions, alongside a customizing system for automated design and manufacturing.</p>
   </section>
 
-  <!-- DEMO VIDEO / GIF (main) -->
+  <!-- DEMO -->
   <section class="proj-section">
     <span class="proj-section-label">Demo</span>
     <div class="proj-media">
-      <!-- Replace with: <video src="media/demo.mp4" autoplay loop muted playsinline></video> -->
-      <!-- Or:           <img src="media/demo.gif" alt="Demo"> -->
-      <div class="proj-media-placeholder">[ Main demo video or GIF ]</div>
+      <!-- Replace with: <video src="media/sensequins-demo.mp4" autoplay loop muted playsinline></video> -->
+      <div class="proj-media-placeholder">[ Demo video — design software, 3D printing, sewing, and body movement sensing ]</div>
     </div>
-    <p class="proj-media-caption">[ Caption describing what the demo shows ]</p>
+    <p class="proj-media-caption">SenSequins allows users to design conductive sequins in software (a), assemble the textile with a 3D printer and sewing machine (b, c), and build applications such as motion sensing and posture detection (d).</p>
   </section>
 
-  <!-- BACKGROUND + PROBLEM -->
+  <!-- KEY CONTRIBUTIONS -->
   <section class="proj-section">
-    <span class="proj-section-label">Background</span>
+    <span class="proj-section-label">Contributions</span>
+    <h2>What Makes SenSequins Different</h2>
     <div class="proj-block">
       <div class="proj-block-text">
-        <h3>The Problem</h3>
-        <p>[ Describe the research gap or problem this work addresses. What didn't exist before? What was the limitation of prior approaches? ]</p>
-        <p>[ Second paragraph if needed. ]</p>
+        <h3>2.5D Semi-Dimensional Structure</h3>
+        <p>Unlike flat smart textile circuits, SenSequins extends the structure from two-dimensional to three-dimensional through 3D printed conductive sequins. Each sequin acts as an independent design unit — adjustable in conductivity, shape, and arrangement.</p>
+        <p>The special double-layer structure (base textile + sequins) releases the design and configuration space of electronic components far beyond what flat embroidery allows.</p>
       </div>
       <div class="proj-media">
-        <div class="proj-media-placeholder">[ Image / GIF ]</div>
+        <!-- <img src="media/design-space.jpg" alt="Design Space"> -->
+        <div class="proj-media-placeholder">[ Figure 2 — Design space of shape, sewing method, and material ]</div>
       </div>
     </div>
 
     <div class="proj-block reverse">
       <div class="proj-block-text">
-        <h3>Approach</h3>
-        <p>[ Describe your method or design approach. How did you tackle the problem? What technical or material strategies did you use? ]</p>
+        <h3>Modular & Disassemblable</h3>
+        <p>Most smart textiles are difficult to modify during prototyping. SenSequins solves this by making sequins easily removable and replaceable — no special sewing skills required. Participants in user tests could complete full design iterations within a two-hour workshop.</p>
       </div>
       <div class="proj-media">
-        <div class="proj-media-placeholder">[ Image / GIF ]</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FINDINGS / RESULTS -->
-  <section class="proj-section">
-    <span class="proj-section-label">Results</span>
-    <h2>Key Findings</h2>
-
-    <div class="proj-media-grid cols-2" style="margin-bottom: 48px;">
-      <div class="proj-media">
-        <div class="proj-media-placeholder">[ Result video or GIF 1 ]</div>
-      </div>
-      <div class="proj-media">
-        <div class="proj-media-placeholder">[ Result video or GIF 2 ]</div>
+        <div class="proj-media-placeholder">[ Figure 5 — Conductive & non-conductive sequins, linen, sewing threads ]</div>
       </div>
     </div>
 
     <div class="proj-block">
       <div class="proj-block-text">
-        <h3>[ Finding 1 ]</h3>
-        <p>[ Describe the main result or contribution. Quantitative or qualitative outcomes. ]</p>
+        <h3>Circuit by Flip</h3>
+        <p>When sequins lie flat, they contact adjacent sequins to form a closed circuit. When touched and flipped, the circuit opens. By placing the hole at the center instead of the edge, sequins become bistable — acting like a slide switch that holds its state until manually returned.</p>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 6 — Open-circuit and closed-circuit by flipping conductive sequins ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESIGN SPACE -->
+  <section class="proj-section">
+    <span class="proj-section-label">Design Space</span>
+    <h2>Sequin Design Primitives</h2>
+
+    <div class="proj-media-grid cols-2" style="margin-bottom: 48px;">
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 7 — Conductivity experiment results (diameter, thickness, overlap, fill rate) ]</div>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 8 — Shape & softness: curvature vs. bending height ]</div>
+      </div>
+    </div>
+
+    <div class="proj-block">
+      <div class="proj-block-text">
+        <h3>Conductivity Control</h3>
+        <p>Using Composite Conductive PLA (volume resistivity 30 Ω-cm), resistance can be tuned by changing sequin diameter, thickness, overlap ratio, and 3D printing fill rate. Smaller size, larger thickness, higher overlap, and lower fill rate all increase conductivity.</p>
+        <p>These parameters feed directly into the design software, showing estimated resistance values in real time as designers adjust dimensions.</p>
       </div>
       <div class="proj-block-text">
-        <h3>[ Finding 2 ]</h3>
-        <p>[ Second key finding or implication. ]</p>
+        <h3>Sensing Modes</h3>
+        <p><strong>Resistive:</strong> Detects contact between sequins via voltage divider circuit (Arduino Uno).</p>
+        <p><strong>Capacitive:</strong> Using 1–10 MΩ resistors, sequins can sense touch and proximity without contact.</p>
+        <p><strong>Bistable switch:</strong> Center-hole sequins latch in flipped position, acting as a slide switch.</p>
+        <p><strong>Locking structure:</strong> Textured stair-step tips allow sequins to bind together under pressure and release when force is applied.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section class="proj-section">
+    <span class="proj-section-label">System</span>
+    <h2>Design Tool & Automated Manufacturing</h2>
+    <div class="proj-block">
+      <div class="proj-block-text">
+        <h3>Design Software</h3>
+        <p>Built in Rhinoceros + Grasshopper. Users prepare mesh data for the target surface, specify sequin diameter, thickness, hole position, and overlap. The tool automatically places sequins across the mesh and displays estimated resistance values in real time.</p>
+        <p>Output: STL file for 3D printing + SVG file for the sewing machine's positioning path.</p>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 13 — Design software interface ]</div>
+      </div>
+    </div>
+    <div class="proj-block reverse">
+      <div class="proj-block-text">
+        <h3>Automated Sewing</h3>
+        <p>Sequins are printed in horizontal rows with breakable supports between them. A computerized embroidery machine (Brother Parie-EMM1901) sews the sequins row by row using the SVG positioning file. After sewing, the supports are folded and snapped apart by hand to complete the process.</p>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 14 — Automatic manufacturing process with sewing machine ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLICATIONS -->
+  <section class="proj-section">
+    <span class="proj-section-label">Applications</span>
+    <h2>Prototypes</h2>
+    <div class="proj-media-grid cols-2" style="margin-bottom: 2px;">
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 16–18 — Garment with 84 modules visualizing body movement via NeoPixel LEDs ]</div>
+      </div>
+      <div class="proj-media">
+        <div class="proj-media-placeholder">[ Figure 19 — Ankle band: cube on screen elongates / shortens with foot position ]</div>
+      </div>
+    </div>
+    <div class="proj-block" style="margin-top: 48px;">
+      <div class="proj-block-text">
+        <h3>Body Movement Garment</h3>
+        <p>84 modules (6 × 14 switch array) arranged across a two-layer garment (organza outer, cotton inner). Square fish-scale conductive sequins close circuits when the body moves — triggering NeoPixel LEDs on the reverse side. Visualized in real time via TouchDesigner. A dancer wore the garment and reported "it felt like talking to her own body."</p>
+      </div>
+      <div class="proj-block-text">
+        <h3>Ankle Posture Detection</h3>
+        <p>Curved 25 mm conductive sequins embroidered with rubber thread, fitted to the ankle. Elastic embroidery thread conforms to the body curve. Foot movement is converted to particle and cube animation on screen — heel down elongates the cube, toe raise shortens it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- USER STUDY -->
+  <section class="proj-section">
+    <span class="proj-section-label">User Study</span>
+    <h2>Workshop Results</h2>
+    <div class="proj-media" style="margin-bottom: 48px;">
+      <div class="proj-media-placeholder">[ Figure 20–22 — Workshop setup and participant artworks ]</div>
+    </div>
+    <div class="proj-block">
+      <div class="proj-block-text">
+        <h3>8 Participants · 2 Hours</h3>
+        <p>6 female, 2 male, age 20–40. All had basic programming and hardware skills; backgrounds in graphic and product design. Participants sketched freely, then used the design software to build their own conductive sequin pieces.</p>
+        <p>Selected works: an eye mask sensing blink muscle movements (Participant C), a raincoat lighting up with raindrops via water conductivity (Participant G), and a "back wing" sensing wind through sequin movement (Participant A).</p>
+      </div>
+      <div class="proj-block-text">
+        <h3>Key Findings</h3>
+        <p>Participants preferred sequins with complex structures (intricate textures, lockable, openwork). The detachable property enabled multiple rapid prototyping iterations without special sewing skills.</p>
+        <p>Likert scale results: Smart function was perceived as moderately limiting to design (M=3.88, SD=1.81). Participants completed both fashion and smart functional design within two hours — validating the accessibility of the design space.</p>
       </div>
     </div>
   </section>
@@ -147,19 +231,19 @@
     <div class="proj-details-grid">
       <div class="detail-item">
         <span class="detail-label">Materials</span>
-        <span class="detail-val">[ e.g. Conductive thread, Lycra, Arduino ]</span>
+        <span class="detail-val">Conductive PLA · Non-conductive PLA · Linen · Organza · Conductive & rubber sewing thread</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Tools</span>
-        <span class="detail-val">[ e.g. Rhino, Python, Custom firmware ]</span>
+        <span class="detail-val">Rhinoceros · Grasshopper · Arduino Uno · Brother Parie-EMM1901 · TouchDesigner</span>
       </div>
       <div class="detail-item">
-        <span class="detail-label">Collaborators</span>
-        <span class="detail-val">[ Names or institutions ]</span>
+        <span class="detail-label">Keywords</span>
+        <span class="detail-val">Smart Textiles · Conductive Material · Wearable Device · Sensing Interface · Digital Fabrication</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Funding</span>
-        <span class="detail-val">[ Grant / institution if applicable ]</span>
+        <span class="detail-val">JST SPRING (JPMJSP2123) · ZOZO NEXT Inc., Japan</span>
       </div>
     </div>
   </section>
