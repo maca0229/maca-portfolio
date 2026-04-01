@@ -108,133 +108,261 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ─── HERO THREE.JS — FABRIC MESH ─── */
-(function initHero() {
-  const canvas   = document.getElementById('hero-canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.setClearColor(0x000000, 0);
+/* ─── SHARED TEXTURE DRAWING FUNCTIONS ─── */
 
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 6);
+function clipToShape(ctx, shape, x, y, r) {
+  ctx.beginPath();
+  if (shape === 'circle') {
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+  } else if (shape === 'square') {
+    ctx.rect(x - r * 0.9, y - r * 0.9, r * 1.8, r * 1.8);
+  } else { // triangle
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r * 0.9, y + r * 0.75);
+    ctx.lineTo(x - r * 0.9, y + r * 0.75);
+    ctx.closePath();
+  }
+  ctx.clip();
+}
 
-  /* Wireframe cloth */
-  const geo = new THREE.PlaneGeometry(14, 9, 70, 45);
-  const mat = new THREE.MeshBasicMaterial({
-    color: 0xFADC00, wireframe: true, transparent: true, opacity: 0.12
-  });
-  const cloth = new THREE.Mesh(geo, mat);
-  scene.add(cloth);
+function strokeShape(ctx, shape, x, y, r, color) {
+  ctx.beginPath();
+  if (shape === 'circle') {
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+  } else if (shape === 'square') {
+    ctx.rect(x - r * 0.9, y - r * 0.9, r * 1.8, r * 1.8);
+  } else {
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r * 0.9, y + r * 0.75);
+    ctx.lineTo(x - r * 0.9, y + r * 0.75);
+    ctx.closePath();
+  }
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 0.9;
+  ctx.stroke();
+}
 
-  /* Particles */
-  const pGeo = new THREE.BufferGeometry();
-  const pPos = new Float32Array(600 * 3);
-  for (let i = 0; i < pPos.length; i++) pPos[i] = (Math.random() - 0.5) * 22;
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const pMat = new THREE.PointsMaterial({ color: 0xCA4CE5, size: 0.025, transparent: true, opacity: 0.4 });
-  scene.add(new THREE.Points(pGeo, pMat));
+function drawStripes(ctx, x, y, r, color) {
+  const count = 5;
+  const spacing = r * 2 / count;
+  for (let i = 0; i < count; i++) {
+    const ly = y - r + spacing * i + spacing / 2;
+    ctx.beginPath();
+    ctx.moveTo(x - r, ly);
+    ctx.lineTo(x + r, ly);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+}
 
-  const clock = new THREE.Clock();
-  const origZ = Array.from({ length: geo.attributes.position.count }, (_, i) =>
-    geo.attributes.position.getZ(i)
-  );
-
-  (function loop() {
-    requestAnimationFrame(loop);
-    const t   = clock.getElapsedTime();
-    const pos = geo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), y = pos.getY(i);
-      pos.setZ(i,
-        Math.sin(x * 0.45 + t * 0.55) * 0.35 +
-        Math.sin(y * 0.45 + t * 0.35) * 0.35 +
-        Math.sin((x + y) * 0.28 + t * 0.42) * 0.22
-      );
+function drawWavy(ctx, x, y, r, color, t, phase) {
+  const count = 4;
+  const spacing = r * 2 / count;
+  for (let i = 0; i < count; i++) {
+    const ly = y - r + spacing * i + spacing / 2;
+    ctx.beginPath();
+    let first = true;
+    for (let px = x - r; px <= x + r; px += 2) {
+      const wy = ly + Math.sin((px - x) * 0.28 + t * 0.8 + phase) * r * 0.2;
+      if (first) { ctx.moveTo(px, wy); first = false; }
+      else ctx.lineTo(px, wy);
     }
-    pos.needsUpdate = true;
-    cloth.rotation.z = Math.sin(t * 0.08) * 0.04;
-    renderer.render(scene, camera);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+}
+
+function drawAnnual(ctx, x, y, r, color) {
+  const rings = 4;
+  for (let i = 1; i <= rings; i++) {
+    ctx.beginPath();
+    ctx.arc(x, y, r * i / rings, 0, Math.PI * 2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+}
+
+function drawDots(ctx, x, y, r, color) {
+  const grid = 4;
+  const step = (r * 1.6) / (grid - 1);
+  for (let row = 0; row < grid; row++) {
+    for (let col = 0; col < grid; col++) {
+      const dx = x - r * 0.8 + col * step;
+      const dy = y - r * 0.8 + row * step;
+      ctx.beginPath();
+      ctx.arc(dx, dy, 1.4, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  }
+}
+
+function drawThread(ctx, x, y, r, color) {
+  const ty = y - r;
+  ctx.beginPath();
+  ctx.moveTo(x, ty);
+  ctx.lineTo(x, ty - r * 0.42);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(x, ty - r * 0.42, 2, 0, Math.PI * 2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+}
+
+function drawTexture(ctx, texture, x, y, r, color, t, phase) {
+  if (texture === 'stripes') drawStripes(ctx, x, y, r, color);
+  else if (texture === 'wavy') drawWavy(ctx, x, y, r, color, t, phase);
+  else if (texture === 'annual') drawAnnual(ctx, x, y, r, color);
+  else drawDots(ctx, x, y, r, color);
+}
+
+/* ─── HERO — SEQUIN TEXTURE GRID ─── */
+(function initHero() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+
+  const COLORS   = ['#68007F','#CA4CE5','#004727','#1F9907','#61A94D','#CC9F01','#FADC00'];
+  const SHAPES   = ['circle','circle','circle','square','triangle'];
+  const TEXTURES = ['stripes','wavy','annual','dots'];
+  const R      = 26;
+  const COL_W  = R * 1.72;
+  const ROW_H  = R * 1.52;
+
+  let cells = [];
+  let mouse = { x: -999, y: -999 };
+
+  function setup() {
+    canvas.width  = innerWidth;
+    canvas.height = innerHeight;
+    cells = [];
+    const rows = Math.ceil(canvas.height / ROW_H) + 3;
+    const cols = Math.ceil(canvas.width  / COL_W) + 3;
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const offset = (row % 2) * (COL_W / 2);
+        cells.push({
+          x:       col * COL_W + offset - COL_W,
+          y:       row * ROW_H,
+          r:       R * (0.82 + Math.random() * 0.36),
+          shape:   SHAPES[Math.floor(Math.random() * SHAPES.length)],
+          texture: TEXTURES[Math.floor(Math.random() * TEXTURES.length)],
+          color:   COLORS[Math.floor(Math.random() * COLORS.length)],
+          phase:   Math.random() * Math.PI * 2,
+          pulse:   0.25 + Math.random() * 0.35,
+        });
+      }
+    }
+    cells.sort((a, b) => b.y - a.y); // bottom rows first so top rows overlap
+  }
+
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  let t = 0;
+  (function tick() {
+    requestAnimationFrame(tick);
+    t += 0.016;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (const c of cells) {
+      const dx    = c.x - mouse.x;
+      const dy    = c.y - mouse.y;
+      const dist  = Math.sqrt(dx * dx + dy * dy);
+      const hover = dist < 110 ? (1 - dist / 110) : 0;
+      const r     = c.r * (1 + Math.sin(c.phase + t * c.pulse) * 0.04) * (1 + hover * 0.18);
+      const alpha = 0.2 + hover * 0.45;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+
+      // Outline shape
+      strokeShape(ctx, c.shape, c.x, c.y, r, c.color);
+
+      // Texture inside (clipped)
+      ctx.save();
+      clipToShape(ctx, c.shape, c.x, c.y, r - 1);
+      drawTexture(ctx, c.texture, c.x, c.y, r, c.color, t, c.phase);
+      ctx.restore();
+
+      // Thread detail
+      drawThread(ctx, c.x, c.y, r, c.color);
+
+      ctx.restore();
+    }
   })();
 
-  window.addEventListener('resize', () => {
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-  });
+  window.addEventListener('resize', setup);
+  setup();
 })();
 
-/* ─── PROJECT CANVAS ANIMATIONS ─── */
-function initProjectCanvas(canvas, shape, accentHex) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  const W = canvas.offsetWidth || 600, H = canvas.offsetHeight || 440;
-  renderer.setSize(W, H);
-  renderer.setClearColor(0x000000, 0);
+/* ─── PROJECT CANVAS — TEXTURE PATTERNS ─── */
+function initProjectCanvas(canvas, texture, accentHex) {
+  const ctx = canvas.getContext('2d');
+  let W = canvas.offsetWidth || 600;
+  let H = canvas.offsetHeight || 440;
+  canvas.width  = W;
+  canvas.height = H;
 
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
-  camera.position.z = 5;
+  const TEXTURES_ALL = ['stripes','wavy','annual','dots'];
+  const R   = Math.min(W, H) * 0.11;
 
-  const color = new THREE.Color(accentHex);
-  const clock = new THREE.Clock();
-  let mesh;
-
-  if (shape === 'fabric') {
-    const geo = new THREE.PlaneGeometry(8, 6, 40, 26);
-    mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.2 }));
-  } else if (shape === 'sphere') {
-    const geo = new THREE.SphereGeometry(2, 32, 20);
-    mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.2 }));
-  } else if (shape === 'grid') {
-    const geo = new THREE.TorusGeometry(2, 0.6, 16, 60);
-    mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.2 }));
-  } else if (shape === 'waves') {
-    const geo = new THREE.PlaneGeometry(9, 7, 50, 32);
-    mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.2 }));
-  } else {
-    // particles
-    const pGeo = new THREE.BufferGeometry();
-    const pp = new Float32Array(400 * 3);
-    for (let i = 0; i < pp.length; i++) pp[i] = (Math.random() - 0.5) * 8;
-    pGeo.setAttribute('position', new THREE.BufferAttribute(pp, 3));
-    mesh = new THREE.Points(pGeo, new THREE.PointsMaterial({ color, size: 0.05, transparent: true, opacity: 0.6 }));
-  }
-  scene.add(mesh);
-
-  (function loop() {
-    requestAnimationFrame(loop);
-    const t = clock.getElapsedTime();
-
-    if (shape === 'fabric' || shape === 'waves') {
-      const pos = mesh.geometry.attributes.position;
-      for (let i = 0; i < pos.count; i++) {
-        const x = pos.getX(i), y = pos.getY(i);
-        pos.setZ(i,
-          Math.sin(x * 0.6 + t * 0.6) * 0.4 +
-          Math.sin(y * 0.5 + t * 0.4) * 0.3
-        );
+  // Build a grid of sequin cells for the card
+  function buildCells(w, h) {
+    const cells = [];
+    const rows = Math.ceil(h / (R * 1.5)) + 2;
+    const cols = Math.ceil(w / (R * 1.7)) + 2;
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const offset = (row % 2) * (R * 0.85);
+        const tex = texture === 'mixed'
+          ? TEXTURES_ALL[Math.floor(Math.random() * 4)]
+          : texture;
+        cells.push({
+          x:     col * R * 1.7 + offset,
+          y:     row * R * 1.5,
+          r:     R * (0.8 + Math.random() * 0.4),
+          shape: Math.random() < 0.75 ? 'circle' : (Math.random() < 0.5 ? 'square' : 'triangle'),
+          tex,
+          phase: Math.random() * Math.PI * 2,
+          pulse: 0.2 + Math.random() * 0.3,
+        });
       }
-      pos.needsUpdate = true;
-    } else if (shape === 'sphere') {
-      mesh.rotation.y = t * 0.3;
-      mesh.rotation.x = Math.sin(t * 0.2) * 0.2;
-    } else if (shape === 'grid') {
-      mesh.rotation.x = t * 0.25;
-      mesh.rotation.y = t * 0.18;
-    } else {
-      mesh.rotation.y = t * 0.12;
     }
-    renderer.render(scene, camera);
+    cells.sort((a, b) => b.y - a.y);
+    return cells;
+  }
+
+  let cells = buildCells(W, H);
+  let t = 0;
+
+  (function tick() {
+    requestAnimationFrame(tick);
+    t += 0.016;
+    ctx.clearRect(0, 0, W, H);
+
+    for (const c of cells) {
+      const r = c.r * (1 + Math.sin(c.phase + t * c.pulse) * 0.05);
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      strokeShape(ctx, c.shape, c.x, c.y, r, accentHex);
+      ctx.save();
+      clipToShape(ctx, c.shape, c.x, c.y, r - 1);
+      drawTexture(ctx, c.tex, c.x, c.y, r, accentHex, t, c.phase);
+      ctx.restore();
+      drawThread(ctx, c.x, c.y, r, accentHex);
+      ctx.restore();
+    }
   })();
 
-  // Resize observer
   new ResizeObserver(() => {
-    const W2 = canvas.offsetWidth, H2 = canvas.offsetHeight;
-    camera.aspect = W2 / H2;
-    camera.updateProjectionMatrix();
-    renderer.setSize(W2, H2);
+    W = canvas.offsetWidth; H = canvas.offsetHeight;
+    canvas.width = W; canvas.height = H;
+    cells = buildCells(W, H);
   }).observe(canvas);
 }
 
@@ -264,9 +392,9 @@ document.querySelectorAll('.project-card').forEach((card, i) => {
 
   // Init canvas after card is in DOM
   const canvas  = card.querySelector('.project-canvas');
-  const shape   = canvas.dataset.shape;
+  const texture = canvas.dataset.texture;
   const accent  = getComputedStyle(card).getPropertyValue('--accent').trim();
-  setTimeout(() => initProjectCanvas(canvas, shape, accent), 300 + i * 100);
+  setTimeout(() => initProjectCanvas(canvas, texture, accent), 300 + i * 100);
 });
 
 // Section header
