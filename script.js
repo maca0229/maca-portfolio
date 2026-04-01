@@ -5,16 +5,51 @@ function initMosaicTitle() {
   const ctx     = canvas.getContext('2d');
 
   const COLORS = ['#68007F','#CA4CE5','#004727','#1F9907','#61A94D','#CC9F01','#FADC00'];
-  const CELL   = 15;   // 基础格子大小，用于分层布局
+  const CELL   = 15;
   const RADIUS = 130;
   const FORCE  = 230;
   const SPRING = 0.052;
   const DAMP   = 0.68;
+  const EMB    = 11;   // 浮雕检测偏移量（像素）
+  const LIFT   = 72;   // 高光/阴影亮度变化量
 
   let tiles = [];
   let mouse = { x: -9999, y: -9999 };
-
   const rnd = (a, b) => a + Math.random() * (b - a);
+
+  // 颜色变亮/变暗工具
+  function lighten(hex, amt) {
+    const r = Math.min(255, parseInt(hex.slice(1,3), 16) + amt);
+    const g = Math.min(255, parseInt(hex.slice(3,5), 16) + amt);
+    const b = Math.min(255, parseInt(hex.slice(5,7), 16) + amt);
+    return `rgb(${r},${g},${b})`;
+  }
+  function darken(hex, amt) {
+    const r = Math.max(0, parseInt(hex.slice(1,3), 16) - amt);
+    const g = Math.max(0, parseInt(hex.slice(3,5), 16) - amt);
+    const b = Math.max(0, parseInt(hex.slice(5,7), 16) - amt);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // 把 "MACA" 渲染到离屏 canvas，返回像素掩码
+  function buildTextMask(W, H) {
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const c = off.getContext('2d');
+    const fs = Math.round(H * 0.82);
+    c.font = `700 ${fs}px 'Space Grotesk', sans-serif`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillStyle = '#fff';
+    c.fillText('MACA', W / 2, H / 2);
+    return c.getImageData(0, 0, W, H);
+  }
+
+  function inText(mask, x, y) {
+    const xi = Math.round(x), yi = Math.round(y);
+    if (xi < 0 || yi < 0 || xi >= mask.width || yi >= mask.height) return false;
+    return mask.data[(yi * mask.width + xi) * 4] > 80;
+  }
 
   function setup() {
     const rect = wrapper.getBoundingClientRect();
@@ -25,29 +60,36 @@ function initMosaicTitle() {
     canvas.style.width  = W + 'px';
     canvas.style.height = H + 'px';
 
+    const mask = buildTextMask(W, H);
+
     tiles = [];
     for (let cy = 0; cy * CELL < H + CELL; cy++) {
       for (let cx = 0; cx * CELL < W + CELL; cx++) {
-        if (Math.random() < 0.10) continue;  // 10% 空隙，让文字自然透出
+        // 随机大小（无旋转），位置加随机偏移产生部分重叠
+        const ox = cx * CELL + rnd(-CELL * 0.55, CELL * 0.55);
+        const oy = cy * CELL + rnd(-CELL * 0.55, CELL * 0.55);
+        const w  = rnd(8, 22);
+        const h  = rnd(7, 22);
+        const tcx = ox + w / 2;
+        const tcy = oy + h / 2;
 
-        // 格子内随机偏移 → 打破规整感
-        const ox  = cx * CELL + rnd(-CELL * 0.6, CELL * 0.6);
-        const oy  = cy * CELL + rnd(-CELL * 0.6, CELL * 0.6);
-        const w   = rnd(7, 20);
-        const h   = rnd(6, 20);
-        const rot = rnd(-0.38, 0.38);           // ±22° 随机旋转
-        const alpha = rnd(0.52, 0.96);
+        // 浮雕边缘检测：光源方向左上→右下
+        const tl = inText(mask, tcx - EMB, tcy - EMB); // 左上
+        const br = inText(mask, tcx + EMB, tcy + EMB); // 右下
+        let emboss = 0;
+        if (!tl && br) emboss =  1;  // 高光边（左上边缘）
+        if (tl && !br) emboss = -1;  // 阴影边（右下边缘）
 
-        // 入场：从四面八方飞入
+        const base = COLORS[Math.floor(Math.random() * COLORS.length)];
         const ang  = Math.random() * Math.PI * 2;
-        const dist = rnd(280, 480);
+        const dist = rnd(260, 480);
 
         tiles.push({
-          ox, oy, w, h, rot, alpha,
+          ox, oy, w, h, emboss, base,
+          color: emboss === 1 ? lighten(base, LIFT) : emboss === -1 ? darken(base, LIFT) : base,
           x: ox + Math.cos(ang) * dist,
           y: oy + Math.sin(ang) * dist,
           vx: 0, vy: 0,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
         });
       }
     }
@@ -64,10 +106,10 @@ function initMosaicTitle() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const t of tiles) {
-      const cx   = t.ox + t.w / 2;
-      const cy   = t.oy + t.h / 2;
-      const dx   = cx - mouse.x;
-      const dy   = cy - mouse.y;
+      const tcx  = t.ox + t.w / 2;
+      const tcy  = t.oy + t.h / 2;
+      const dx   = tcx - mouse.x;
+      const dy   = tcy - mouse.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       let tx = t.ox, ty = t.oy;
@@ -85,19 +127,17 @@ function initMosaicTitle() {
       t.x  += t.vx;
       t.y  += t.vy;
 
-      ctx.save();
-      ctx.globalAlpha = t.alpha;
-      ctx.fillStyle   = t.color;
-      ctx.translate(t.x + t.w / 2, t.y + t.h / 2);
-      ctx.rotate(t.rot);
-      ctx.fillRect(-t.w / 2, -t.h / 2, t.w, t.h);
-      ctx.restore();
+      ctx.fillStyle = t.color;
+      ctx.fillRect(Math.round(t.x), Math.round(t.y), Math.round(t.w), Math.round(t.h));
     }
   }
 
-  setup();
-  tick();
-  window.addEventListener('resize', setup);
+  // 等字体加载完再渲染文字掩码
+  document.fonts.ready.then(() => {
+    setup();
+    tick();
+    window.addEventListener('resize', setup);
+  });
 }
 
 /* ─── CUSTOM CURSOR ─── */
