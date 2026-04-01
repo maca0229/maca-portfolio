@@ -449,6 +449,46 @@ function initProjectCanvas(canvas, texture, accentHex) {
   }).observe(canvas);
 }
 
+/* ─── PROJECT PANELS ─── */
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const item  = card.closest('.project-item');
+    const panel = item.querySelector('.project-panel');
+    const isOpen = panel.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.project-panel.open').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.project-card.open').forEach(c => c.classList.remove('open'));
+
+    // Open this one if it was closed
+    if (!isOpen) {
+      panel.classList.add('open');
+      card.classList.add('open');
+      setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+    }
+  });
+});
+
+// Carousel
+document.querySelectorAll('.panel-carousel').forEach(carousel => {
+  const track  = carousel.querySelector('.carousel-track');
+  const slides = carousel.querySelectorAll('.carousel-slide');
+  const dots   = carousel.querySelectorAll('.dot');
+  const prev   = carousel.querySelector('.carousel-prev');
+  const next   = carousel.querySelector('.carousel-next');
+  let current  = 0;
+
+  function goTo(i) {
+    current = (i + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
+  }
+
+  prev.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
+  next.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
+  dots.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+});
+
 /* ─── GSAP ANIMATIONS ─── */
 gsap.registerPlugin(ScrollTrigger);
 
