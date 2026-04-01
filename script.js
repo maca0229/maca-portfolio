@@ -102,6 +102,9 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
   requestAnimationFrame(animateCursor);
 })();
 
+/* ─── I18N ─── */
+initI18n();
+
 /* ─── NAV SCROLL ─── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {

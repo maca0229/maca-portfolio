@@ -52,6 +52,9 @@
   document.addEventListener('touchend', () => { if (!isDragging) return; isDragging = false; snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0); });
 })();
 
+/* ─── I18N ─── */
+initI18n();
+
 /* ─── CUSTOM CURSOR ─── */
 const cursor     = document.createElement('div'); cursor.className     = 'cursor';
 const cursorRing = document.createElement('div'); cursorRing.className = 'cursor-ring';
