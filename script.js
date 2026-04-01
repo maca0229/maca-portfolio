@@ -111,31 +111,62 @@ window.addEventListener('scroll', () => {
 /* ─── B&W CIRCLE REVEAL TOGGLE ─── */
 const bwBtn   = document.getElementById('bw-toggle');
 const bwLayer = document.getElementById('bw-layer');
-let bwActive = false;
+let bwActive  = false;
+let bwBusy    = false;
 
-bwBtn.addEventListener('click', (e) => {
-  const rect = bwBtn.getBoundingClientRect();
-  const ox = Math.round(rect.left + rect.width / 2) + 'px';
-  const oy = Math.round(rect.top  + rect.height / 2) + 'px';
-  bwLayer.style.setProperty('--ox', ox);
-  bwLayer.style.setProperty('--oy', oy);
+function bwOrigin() {
+  const r = bwBtn.getBoundingClientRect();
+  return `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
+}
 
+function enterBW() {
+  if (bwBusy) return;
+  bwBusy = true;
+  const o = bwOrigin();
+
+  // 1. 重置：小圆、不透明白色
+  bwLayer.style.transition = 'none';
+  bwLayer.style.opacity    = '1';
+  bwLayer.style.clipPath   = `circle(0% at ${o})`;
+  void bwLayer.offsetWidth;
+
+  // 2. 白圆扩散到全屏
+  bwLayer.style.transition = 'clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1)';
+  bwLayer.style.clipPath   = `circle(150% at ${o})`;
+
+  bwLayer.addEventListener('transitionend', () => {
+    // 3. 应用黑白反转滤镜（白底黑字）
+    document.documentElement.classList.add('bw');
+    // 4. 白圆淡出，露出白底页面
+    bwLayer.style.transition = 'opacity 0.3s ease';
+    bwLayer.style.opacity    = '0';
+    bwLayer.addEventListener('transitionend', () => { bwBusy = false; }, { once: true });
+  }, { once: true });
+}
+
+function exitBW() {
+  if (bwBusy) return;
+  bwBusy = true;
+  const o = bwOrigin();
+
+  // 1. 白圆淡入覆盖页面
+  bwLayer.style.transition = 'opacity 0.3s ease';
+  bwLayer.style.opacity    = '1';
+
+  bwLayer.addEventListener('transitionend', () => {
+    // 2. 移除滤镜（页面回彩色，被白圆遮住）
+    document.documentElement.classList.remove('bw');
+    // 3. 白圆收缩回按钮
+    bwLayer.style.transition = 'clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1)';
+    bwLayer.style.clipPath   = `circle(0% at ${o})`;
+    bwLayer.addEventListener('transitionend', () => { bwBusy = false; }, { once: true });
+  }, { once: true });
+}
+
+bwBtn.addEventListener('click', () => {
   bwActive = !bwActive;
-  if (bwActive) {
-    bwLayer.classList.remove('shrink');
-    // Force reflow
-    void bwLayer.offsetWidth;
-    bwLayer.classList.add('active');
-    bwBtn.textContent = '◐';
-  } else {
-    bwLayer.classList.remove('active');
-    bwLayer.classList.add('shrink');
-    bwBtn.textContent = '◑';
-    // Clean up after transition
-    bwLayer.addEventListener('transitionend', () => {
-      bwLayer.classList.remove('shrink');
-    }, { once: true });
-  }
+  bwBtn.textContent = bwActive ? '◐' : '◑';
+  if (bwActive) enterBW(); else exitBW();
 });
 
 /* ─── SHARED TEXTURE DRAWING FUNCTIONS ─── */

@@ -23,17 +23,13 @@ html {
   inset: 0;
   pointer-events: none;
   z-index: 9990;
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: grayscale(1) brightness(1.1);
-  -webkit-backdrop-filter: grayscale(1) brightness(1.1);
+  background: #ffffff;
+  opacity: 0;
   clip-path: circle(0% at 50% 50%);
-  transition: clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
-#bw-layer.active {
-  clip-path: circle(150% at var(--ox, 50%) var(--oy, 50%));
-}
-#bw-layer.shrink {
-  clip-path: circle(0% at var(--ox, 50%) var(--oy, 50%));
+
+html.bw {
+  filter: grayscale(1) invert(1);
 }
 
 #bw-toggle {
