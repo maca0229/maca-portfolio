@@ -4,37 +4,48 @@ function initMosaicTitle() {
   const canvas  = document.getElementById('mosaic-canvas');
   const ctx     = canvas.getContext('2d');
 
-  const COLORS  = ['#68007F','#CA4CE5','#004727','#1F9907','#61A94D','#CC9F01','#FADC00'];
-  const TILE    = 13;
-  const RADIUS  = 120;
-  const FORCE   = 200;
-  const SPRING  = 0.055;
-  const DAMP    = 0.70;
+  const COLORS = ['#68007F','#CA4CE5','#004727','#1F9907','#61A94D','#CC9F01','#FADC00'];
+  const CELL   = 15;   // 基础格子大小，用于分层布局
+  const RADIUS = 130;
+  const FORCE  = 230;
+  const SPRING = 0.052;
+  const DAMP   = 0.68;
 
   let tiles = [];
   let mouse = { x: -9999, y: -9999 };
 
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
   function setup() {
     const rect = wrapper.getBoundingClientRect();
-    const W = Math.ceil(rect.width)  + 32;
-    const H = Math.ceil(rect.height) + 20;
+    const W = Math.ceil(rect.width)  + 48;
+    const H = Math.ceil(rect.height) + 28;
     canvas.width  = W;
     canvas.height = H;
     canvas.style.width  = W + 'px';
     canvas.style.height = H + 'px';
 
     tiles = [];
-    for (let row = 0; row * TILE < H; row++) {
-      for (let col = 0; col * TILE < W; col++) {
-        const ox = col * TILE;
-        const oy = row * TILE;
-        // Scatter entrance: start off-screen
-        const angle = Math.random() * Math.PI * 2;
-        const dist  = 300 + Math.random() * 400;
+    for (let cy = 0; cy * CELL < H + CELL; cy++) {
+      for (let cx = 0; cx * CELL < W + CELL; cx++) {
+        if (Math.random() < 0.10) continue;  // 10% 空隙，让文字自然透出
+
+        // 格子内随机偏移 → 打破规整感
+        const ox  = cx * CELL + rnd(-CELL * 0.6, CELL * 0.6);
+        const oy  = cy * CELL + rnd(-CELL * 0.6, CELL * 0.6);
+        const w   = rnd(7, 20);
+        const h   = rnd(6, 20);
+        const rot = rnd(-0.38, 0.38);           // ±22° 随机旋转
+        const alpha = rnd(0.52, 0.96);
+
+        // 入场：从四面八方飞入
+        const ang  = Math.random() * Math.PI * 2;
+        const dist = rnd(280, 480);
+
         tiles.push({
-          ox, oy,
-          x:  ox + Math.cos(angle) * dist,
-          y:  oy + Math.sin(angle) * dist,
+          ox, oy, w, h, rot, alpha,
+          x: ox + Math.cos(ang) * dist,
+          y: oy + Math.sin(ang) * dist,
           vx: 0, vy: 0,
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
         });
@@ -42,24 +53,23 @@ function initMosaicTitle() {
     }
   }
 
-  // Track global mouse, translate to canvas coords
   document.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
   });
 
-  let rafId;
   function tick() {
-    rafId = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let anyMoving = false;
     for (const t of tiles) {
-      // Repulsion from cursor
-      const dx   = t.ox + TILE / 2 - mouse.x;
-      const dy   = t.oy + TILE / 2 - mouse.y;
+      const cx   = t.ox + t.w / 2;
+      const cy   = t.oy + t.h / 2;
+      const dx   = cx - mouse.x;
+      const dy   = cy - mouse.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
+
       let tx = t.ox, ty = t.oy;
       if (dist < RADIUS && dist > 0.5) {
         const push  = (1 - dist / RADIUS) * FORCE;
@@ -68,7 +78,6 @@ function initMosaicTitle() {
         ty = t.oy + Math.sin(angle) * push;
       }
 
-      // Spring physics
       t.vx += (tx - t.x) * SPRING;
       t.vy += (ty - t.y) * SPRING;
       t.vx *= DAMP;
@@ -76,16 +85,19 @@ function initMosaicTitle() {
       t.x  += t.vx;
       t.y  += t.vy;
 
-      if (Math.abs(t.vx) > 0.05 || Math.abs(t.vy) > 0.05) anyMoving = true;
-
-      ctx.fillStyle = t.color;
-      ctx.fillRect(Math.round(t.x) + 1, Math.round(t.y) + 1, TILE - 2, TILE - 2);
+      ctx.save();
+      ctx.globalAlpha = t.alpha;
+      ctx.fillStyle   = t.color;
+      ctx.translate(t.x + t.w / 2, t.y + t.h / 2);
+      ctx.rotate(t.rot);
+      ctx.fillRect(-t.w / 2, -t.h / 2, t.w, t.h);
+      ctx.restore();
     }
   }
 
   setup();
   tick();
-  window.addEventListener('resize', () => { setup(); });
+  window.addEventListener('resize', setup);
 }
 
 /* ─── CUSTOM CURSOR ─── */
