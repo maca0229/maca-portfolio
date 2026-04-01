@@ -140,7 +140,16 @@ function snapTo(target) {
   dragBar.classList.toggle('hidden', bw);
   dragBarRight.classList.toggle('visible', bw);
   peelActive = bw;
+  localStorage.setItem('bwMode', bw ? '1' : '0');
   setReveal(target, true);
+}
+
+// Restore state from previous page (no animation)
+if (localStorage.getItem('bwMode') === '1') {
+  dragBar.classList.add('bw-mode', 'hidden');
+  dragBarRight.classList.add('visible');
+  peelActive = true;
+  setReveal(innerWidth, false);
 }
 
 function startDrag(e) {
