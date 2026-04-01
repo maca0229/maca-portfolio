@@ -108,102 +108,61 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ─── HERO — SEQUIN FIELD ─── */
+/* ─── HERO THREE.JS — FABRIC MESH ─── */
 (function initHero() {
-  const canvas = document.getElementById('hero-canvas');
-  const ctx    = canvas.getContext('2d');
+  const canvas   = document.getElementById('hero-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x000000, 0);
 
-  // 调色盘前色/后色配对（翻转时切换）
-  const PAIRS = [
-    ['#68007F', '#FADC00'],
-    ['#CA4CE5', '#004727'],
-    ['#1F9907', '#CC9F01'],
-    ['#FADC00', '#68007F'],
-    ['#61A94D', '#CA4CE5'],
-    ['#CC9F01', '#1F9907'],
-  ];
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 6);
 
-  const R      = 26;   // 亮片半径
-  const COL_W  = R * 1.75;
-  const ROW_H  = R * 0.72; // 行间距小于直径 → 产生鱼鳞叠压
-
-  let sequins = [];
-  let mouse   = { x: -999, y: -999 };
-
-  function setup() {
-    canvas.width  = innerWidth;
-    canvas.height = innerHeight;
-    sequins = [];
-
-    const rows = Math.ceil(canvas.height / ROW_H) + 3;
-    const cols = Math.ceil(canvas.width  / COL_W) + 3;
-
-    // 从下往上生成，绘制时倒序 → 上排压下排（鱼鳞方向）
-    for (let row = rows - 1; row >= 0; row--) {
-      for (let col = 0; col < cols; col++) {
-        const offset = (row % 2) * (COL_W / 2);
-        const x = col * COL_W + offset - COL_W;
-        const y = row * ROW_H - ROW_H;
-        const pair = PAIRS[Math.floor(Math.random() * PAIRS.length)];
-        sequins.push({
-          x, y,
-          r: R * (0.85 + Math.random() * 0.3),
-          front: pair[0],
-          back:  pair[1],
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.18 + Math.random() * 0.22,
-        });
-      }
-    }
-    // 按 y 降序排列：先画底部行，再画顶部行压上去
-    sequins.sort((a, b) => b.y - a.y);
-  }
-
-  document.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+  /* Wireframe cloth */
+  const geo = new THREE.PlaneGeometry(14, 9, 70, 45);
+  const mat = new THREE.MeshBasicMaterial({
+    color: 0xFADC00, wireframe: true, transparent: true, opacity: 0.12
   });
+  const cloth = new THREE.Mesh(geo, mat);
+  scene.add(cloth);
 
-  let t = 0;
-  (function tick() {
-    requestAnimationFrame(tick);
-    t += 0.016;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  /* Particles */
+  const pGeo = new THREE.BufferGeometry();
+  const pPos = new Float32Array(600 * 3);
+  for (let i = 0; i < pPos.length; i++) pPos[i] = (Math.random() - 0.5) * 22;
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0xCA4CE5, size: 0.025, transparent: true, opacity: 0.4 });
+  scene.add(new THREE.Points(pGeo, pMat));
 
-    for (const s of sequins) {
-      // 鼠标附近翻转加速
-      const dx   = s.x - mouse.x;
-      const dy   = s.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const boost = dist < 180 ? 1 + (1 - dist / 180) * 5 : 1;
+  const clock = new THREE.Clock();
+  const origZ = Array.from({ length: geo.attributes.position.count }, (_, i) =>
+    geo.attributes.position.getZ(i)
+  );
 
-      const angle  = s.phase + t * s.speed * boost;
-      const scaleX = Math.cos(angle);
-      const color  = scaleX >= 0 ? s.front : s.back;
-      const abs    = Math.abs(scaleX);
-
-      ctx.save();
-      ctx.translate(s.x, s.y);
-      ctx.scale(abs, 1);
-
-      // 亮片主体（扁椭圆）
-      ctx.beginPath();
-      ctx.ellipse(0, 0, s.r, s.r * 0.26, 0, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.fill();
-
-      // 高光条（模拟金属反光）
-      ctx.beginPath();
-      ctx.ellipse(-s.r * 0.22, -s.r * 0.05, s.r * 0.38, s.r * 0.07, -0.15, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${0.12 + abs * 0.28})`;
-      ctx.fill();
-
-      ctx.restore();
+  (function loop() {
+    requestAnimationFrame(loop);
+    const t   = clock.getElapsedTime();
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), y = pos.getY(i);
+      pos.setZ(i,
+        Math.sin(x * 0.45 + t * 0.55) * 0.35 +
+        Math.sin(y * 0.45 + t * 0.35) * 0.35 +
+        Math.sin((x + y) * 0.28 + t * 0.42) * 0.22
+      );
     }
+    pos.needsUpdate = true;
+    cloth.rotation.z = Math.sin(t * 0.08) * 0.04;
+    renderer.render(scene, camera);
   })();
 
-  window.addEventListener('resize', setup);
-  setup();
+  window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
 })();
 
 /* ─── PROJECT CANVAS ANIMATIONS ─── */
