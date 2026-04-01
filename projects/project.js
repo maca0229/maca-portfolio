@@ -1,3 +1,49 @@
+/* ─── PAGE PEEL DRAG INTERACTION ─── */
+(function () {
+  const dragBar      = document.getElementById('drag-bar');
+  const dragBarRight = document.getElementById('drag-bar-right');
+  const pagePeel     = document.getElementById('page-peel');
+  const pageEdge     = document.getElementById('page-edge');
+  const BAR_W        = 38;
+  let isDragging = false;
+  let currentX   = 0;
+
+  function setReveal(x, animate) {
+    const clamped = Math.max(0, Math.min(x, innerWidth));
+    if (animate) {
+      pagePeel.style.transition = 'clip-path 0.45s cubic-bezier(0.4,0,0.2,1)';
+      pageEdge.style.transition = 'left 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s';
+    } else {
+      pagePeel.style.transition = 'none';
+      pageEdge.style.transition = 'none';
+    }
+    pagePeel.style.clipPath = `inset(0 ${innerWidth - clamped}px 0 0)`;
+    pageEdge.style.left     = clamped + 'px';
+    pageEdge.style.opacity  = (clamped > BAR_W + 4 && clamped < innerWidth - 4) ? '1' : '0';
+    currentX = clamped;
+  }
+
+  function snapTo(target) {
+    const bw = target > 0;
+    dragBar.classList.toggle('bw-mode', bw);
+    dragBar.classList.toggle('hidden', bw);
+    dragBarRight.classList.toggle('visible', bw);
+    setReveal(target, true);
+  }
+
+  function startDrag(e) { isDragging = true; pagePeel.style.transition = 'none'; pageEdge.style.transition = 'none'; e.preventDefault(); }
+
+  dragBar.addEventListener('mousedown', startDrag);
+  dragBarRight.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', e => { if (isDragging) setReveal(e.clientX); });
+  document.addEventListener('mouseup', () => { if (!isDragging) return; isDragging = false; snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0); });
+
+  dragBar.addEventListener('touchstart', e => { isDragging = true; pagePeel.style.transition = 'none'; e.preventDefault(); }, { passive: false });
+  dragBarRight.addEventListener('touchstart', e => { isDragging = true; pagePeel.style.transition = 'none'; e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', e => { if (isDragging) setReveal(e.touches[0].clientX); }, { passive: true });
+  document.addEventListener('touchend', () => { if (!isDragging) return; isDragging = false; snapTo(currentX > innerWidth * 0.4 ? innerWidth : 0); });
+})();
+
 /* ─── CUSTOM CURSOR ─── */
 const cursor     = document.createElement('div'); cursor.className     = 'cursor';
 const cursorRing = document.createElement('div'); cursorRing.className = 'cursor-ring';
